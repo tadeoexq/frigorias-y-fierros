@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Frigorías y Fierros</title>
+<meta name="description" content="Frigorías, presupuestos y entrenamiento en el bolsillo.">
+<meta name="theme-color" content="#F1F4F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101413" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: app de una columna para celular, barra de pestañas abajo, una tarjeta por herramienta. Acento cobre = caño de cobre del split. */
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --ink:#17201E; --muted:#68736F; --line:#DCE2DF;
+  --accent:#B0562A; --accent-ink:#FFFFFF; --accent-soft:#F5E6DC; --ok:#2E7A58;
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101413; --surface:#181E1C; --ink:#E8EDEB; --muted:#93A09B; --line:#2A3330;
+  --accent:#E38A5B; --accent-ink:#1B0F08; --accent-soft:#38241A; --ok:#5DBA8C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101413; --surface:#181E1C; --ink:#E8EDEB; --muted:#93A09B; --line:#2A3330;
+  --accent:#E38A5B; --accent-ink:#1B0F08; --accent-soft:#38241A; --ok:#5DBA8C; color-scheme:dark}
+
+html,body{height:100%}
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px)}
+[hidden]{display:none!important}
+img{max-width:100%}
+body{margin:0;overscroll-behavior-y:none;background:var(--bg);color:var(--ink);font:17px/1.45 var(--body);-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.app{max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px calc(96px + env(safe-area-inset-bottom,0px))}
+header{display:flex;align-items:center;justify-content:space-between;padding-block:6px 18px}
+.brand{font:800 22px/1 var(--display);letter-spacing:-.01em}
+.brand b{color:var(--accent);font-weight:800}
+.iconbtn{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;color:var(--muted);border:1px solid var(--line)}
+.iconbtn:active{background:var(--accent-soft)}
+
+.view{display:flex;flex-direction:column;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:18px}
+.card h2{margin:0;font:600 15px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+.card h2 svg{width:18px;height:18px}
+
+/* stepper */
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.lbl{color:var(--muted);display:flex;align-items:center;gap:8px}
+.step{display:flex;align-items:center;gap:6px}
+.step button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}
+.step button:active{background:var(--accent-soft)}
+.step output{min-width:58px;text-align:center;font:800 26px/1 var(--display);font-variant-numeric:tabular-nums}
+.step output small{font:400 13px var(--body);color:var(--muted);margin-left:2px}
+
+/* segmented */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.seg button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border-radius:9px;color:var(--muted);font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+
+.result{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
+.big{font:800 44px/1 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.big small{font:600 16px var(--body);color:var(--muted);margin-left:4px;letter-spacing:0}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+.sub{color:var(--muted);font-size:14px}
+
+/* presupuesto */
+.field{width:100%;border:1px solid var(--line);background:transparent;border-radius:12px;padding:12px 14px}
+.field::placeholder{color:var(--muted)}
+.items{display:flex;flex-direction:column}
+.item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);min-height:56px}
+.item:last-child{border-bottom:0}
+.tick{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;color:transparent}
+.tick svg{width:18px;height:18px;stroke-width:2.6}
+.item.on .tick{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.item .name{flex:1;min-width:0;text-align:left}
+.item .price{color:var(--muted);font-variant-numeric:tabular-nums;font-size:15px}
+.item.on .price{color:var(--ink)}
+.qty{display:flex;align-items:center;gap:4px}
+.qty button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}
+.qty button svg{width:16px;height:16px}
+.qty span{min-width:22px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.note{font-size:13px;color:var(--accent);background:var(--accent-soft);border-radius:10px;padding:8px 12px;display:flex;gap:8px;align-items:center}
+.note button{text-decoration:underline;color:inherit;font-weight:700}
+.total{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px}
+.actions{display:grid;grid-template-columns:1fr auto;gap:10px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;border-radius:14px;font-weight:700;padding:0 18px;text-decoration:none}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{border:1px solid var(--line);color:var(--ink)}
+.btn:active{transform:scale(.98)}
+
+/* entreno */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.day{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0 9px;border-radius:12px;color:var(--muted);font-size:13px;border:1px solid transparent}
+.day svg{width:20px;height:20px}
+.day.today{color:var(--ink);font-weight:700}
+.day[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.dayhead{display:flex;align-items:center;gap:14px}
+.dayhead .ico{width:52px;height:52px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.dayhead .ico svg{width:26px;height:26px}
+.dayhead h3{margin:0;font:800 24px/1.1 var(--display)}
+.dayhead p{margin:3px 0 0;color:var(--muted);font-size:15px}
+.ex{display:flex;flex-direction:column}
+.exr{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.exr:last-child{border-bottom:0}
+.exr .n{text-align:left;min-width:0}
+.exr .n span{display:block}
+.exr .reps{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.exr.done .n span:first-child{color:var(--muted);text-decoration:line-through}
+.exr.done .tick{background:var(--ok);border-color:var(--ok);color:#fff}
+.cue{grid-column:2 / 4;font-size:14px;color:var(--muted);margin-top:-4px}
+.timer{font-variant-numeric:tabular-nums}
+.timer.run{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.info{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.info svg{width:18px;height:18px}
+
+/* claude */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:15px;text-align:left}
+.chip:active{background:var(--accent-soft)}
+.chat{display:flex;flex-direction:column;gap:12px}
+.msg{padding:12px 14px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere;max-width:92%}
+.msg.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.ai.wait{color:var(--muted)}
+.composer{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{flex:1;min-width:0;resize:none;border:1px solid var(--line);background:transparent;border-radius:14px;padding:12px 14px;min-height:52px;max-height:140px}
+.composer .iconbtn{width:52px;height:52px;flex:none}
+.composer .send{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.photo{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.photo img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+
+/* tabs */
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
+nav .in{max-width:520px;margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr}
+nav button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 12px;color:var(--muted);font-size:12px;letter-spacing:.02em}
+nav button svg{width:24px;height:24px}
+nav button[aria-selected="true"]{color:var(--accent);font-weight:700}
+
+/* hoja de ajustes */
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet .panel{background:var(--surface);width:100%;max-width:520px;border-radius:20px 20px 0 0;max-height:88%;overflow:auto;padding-block:20px calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+.sheet h3{margin:0;font:800 20px var(--display)}
+.prow{display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:center;font-size:15px}
+.prow input{text-align:right;font-variant-numeric:tabular-nums}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:30}
+@media (prefers-reduced-motion: no-preference){.btn,.chip{transition:transform .1s}}
+.hdr-r{display:flex;gap:8px}
+.install{border-color:var(--accent);color:var(--accent)}
+.hint{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.hint svg{width:16px;height:16px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 2v20M4.9 6.5l14.2 11M19.1 6.5 4.9 17.5M9 3.5l3 2.5 3-2.5M9 20.5l3-2.5 3 2.5"/></symbol>
+  <symbol id="i-dumb" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7Z"/><path d="M19 15.5c.3 1.6 1 2.3 2.5 2.5-1.5.2-2.2.9-2.5 2.5-.3-1.6-1-2.3-2.5-2.5 1.5-.2 2.2-.9 2.5-2.5Z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-area" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><path d="M3.5 9h4M3.5 15h2M9 3.5v3M15 3.5v2"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.6c2.3 0 4 1.5 4.5 4.4"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5h10a4 4 0 0 0 .6-8 5.5 5.5 0 0 0-10.7 1.4A3.4 3.4 0 0 0 7 18.5Z"/></symbol>
+  <symbol id="i-sunlow" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.5-4.3A8.5 8.5 0 1 1 20.5 11.6Z"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V5.5a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5.5 3.5h13v17l-2.2-1.5-2.1 1.5-2.2-1.5-2.2 1.5-2.1-1.5-2.2 1.5Z"/><path d="M9 8.5h6M9 12h6M9 15.5h3"/></symbol>
+  <symbol id="i-swim" viewBox="0 0 24 24"><path d="M2.5 17c1.6 0 1.6 1.3 3.2 1.3S7.3 17 8.9 17s1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3"/><circle cx="17" cy="7" r="2"/><path d="m4.5 13.5 5-3.5 2.5 2.5 3.5-2"/></symbol>
+  <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.8"/><path d="m10.5 21 2-6 2.5 2.5V21M8 12.5l1.5-4.5 4 1 2 3 2.5 1M12.5 15l1-5.5"/></symbol>
+  <symbol id="i-rest" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 1.5M9.5 2.5h5"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-4 16-4-6.5Z"/><path d="m12 13.5 8-9.5"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M3.5 8.5a2 2 0 0 1 2-2h2l1.5-2h6l1.5 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2Z"/><circle cx="12" cy="12.5" r="3.5"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.2"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5M4.5 19.5h15"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5 11 13M17 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 4 18.5v-10A1.5 1.5 0 0 1 5.5 7H10"/></symbol>
+  <symbol id="i-heart"viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"/></symbol>
+</svg>
+
+<div class="app">
+  <header>
+    <div class="brand">Frigorías <b>&amp;</b> Fierros</div>
+    <div class="hdr-r">
+      <button class="iconbtn install" id="installBtn" aria-label="Instalar la app en el celular" title="Instalar" hidden><svg class="i"><use href="#i-down"/></svg></button>
+      <button class="iconbtn" id="gearBtn" aria-label="Ajustes: tu nombre y tus precios" title="Tus precios"><svg class="i"><use href="#i-gear"/></svg></button>
+    </div>
+  </header>
+
+  <!-- TRABAJO -->
+  <section class="view" id="v-trabajo">
+    <div class="card">
+      <h2><svg class="i"><use href="#i-snow"/></svg>¿Qué equipo va?</h2>
+      <div class="row">
+        <span class="lbl"><svg class="i"><use href="#i-area"/></svg>Ambiente</span>
+        <div class="step">
+          <button id="m2Minus" aria-label="Menos metros"><svg class="i"><use href="#i-minus"/></svg></button>
+          <output id="m2Out">16<small>m²</small></output>
+          <button id="m2Plus" aria-label="Más metros"><svg class="i"><use href="#i-plus"/></svg></button>
+        </div>
+      </div>
+      <div class="row">
+        <span class="lbl"><svg class="i"><use href="#i-people"/></svg>Personas</span>
+        <div class="step">
+          <button id="pMinus" aria-label="Menos personas"><svg class="i"><use href="#i-minus"/></svg></button>
+          <output id="pOut">2</output>
+          <button id="pPlus" aria-label="Más personas"><svg class="i"><use href="#i-plus"/></svg></button>
+        </div>
+      </div>
+      <div class="seg" id="sunSeg" role="group" aria-label="Cuánto sol le da">
+        <button data-v="poco" title="Sombra, planta baja"><svg class="i"><use href="#i-cloud"/></svg>Sombra</button>
+        <button data-v="medio" aria-pressed="true" title="Sol parte del día"><svg class="i"><use href="#i-sunlow"/></svg>Algo de sol</button>
+        <button data-v="mucho" title="Sol de tarde, último piso, mucho vidrio"><svg class="i"><use href="#i-sun"/></svg>Pleno sol</button>
+      </div>
+      <div class="result">
+        <div class="big" id="frigOut">2.080<small>fr/h</small></div>
+        <span class="pill" id="eqOut">2.250 fr · 9.000 BTU</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><svg class="i"><use href="#i-receipt"/></svg>Presupuesto</h2>
+      <input class="field" id="cliente" placeholder="Cliente (opcional)" autocomplete="off">
+      <div class="note" id="exNote"><svg class="i" style="width:16px;height:16px"><use href="#i-info"/></svg><span>Precios de ejemplo. <button id="exEdit">Poné los tuyos</button></span></div>
+      <div class="items" id="items"></div>
+      <div class="total">
+        <span class="lbl">Total</span>
+        <span class="big" id="totalOut" style="font-size:34px">$0</span>
+      </div>
+      <div class="actions">
+        <a class="btn primary" id="waBtn" href="#" target="_blank" rel="noopener"><svg class="i"><use href="#i-msg"/></svg>Mandar por WhatsApp</a>
+        <button class="btn ghost" id="copyBtn" aria-label="Copiar texto del presupuesto"><svg class="i"><use href="#i-copy"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENTRENO -->
+  <section class="view" id="v-entreno" hidden>
+    <div class="card">
+      <div class="week" id="week"></div>
+      <div class="dayhead">
+        <div class="ico"><svg class="i" id="dIco"><use href="#i-dumb"/></svg></div>
+        <div><h3 id="dTitle">Fuerza A</h3><p id="dSub"></p></div>
+      </div>
+      <div class="ex" id="exList"></div>
+      <button class="btn ghost timer" id="timerBtn" hidden><svg class="i"><use href="#i-timer"/></svg><span id="timerTxt">Descanso 1:30</span></button>
+    </div>
+    <div class="info"><svg class="i"><use href="#i-heart"/></svg><span>Antes de arrancar fierros, un chequeo con el médico.</span></div>
+  </section>
+
+  <!-- CLAUDE -->
+  <section class="view" id="v-claude" hidden>
+    <div class="card">
+      <h2><svg class="i"><use href="#i-spark"/></svg>Preguntale a Claude</h2>
+      <div class="chips" id="chips">
+        <button class="chip">El split gotea agua adentro</button>
+        <button class="chip">Enfría poco y la exterior hace ruido</button>
+        <button class="chip">Un cliente se queja del precio, ¿qué le contesto?</button>
+        <button class="chip">Me duele la espalda después de una instalación</button>
+        <button class="chip">¿Qué como antes de nadar a la mañana?</button>
+      </div>
+      <div class="composer">
+        <textarea id="ask" rows="1" placeholder="Escribí tu pregunta…"></textarea>
+        <button class="iconbtn send" id="sendBtn" aria-label="Preguntar en Claude"><svg class="i"><use href="#i-send"/></svg></button>
+      </div>
+      <div class="hint"><svg class="i"><use href="#i-out"/></svg>Se abre Claude con la pregunta lista</div>
+    </div>
+  </section>
+</div>
+
+<nav><div class="in" role="tablist">
+  <button role="tab" data-tab="trabajo" aria-selected="true"><svg class="i"><use href="#i-snow"/></svg>Trabajo</button>
+  <button role="tab" data-tab="entreno" aria-selected="false"><svg class="i"><use href="#i-dumb"/></svg>Entreno</button>
+  <button role="tab" data-tab="claude" aria-selected="false" id="claudeTab"><svg class="i"><use href="#i-spark"/></svg>Claude</button>
+</div></nav>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-label="Ajustes">
+    <h3>Tus datos</h3>
+    <input class="field" id="miNombre" placeholder="Tu nombre (firma del presupuesto)" autocomplete="off">
+    <h3 style="margin-top:6px">Tus precios</h3>
+    <div id="priceRows" style="display:flex;flex-direction:column;gap:10px"></div>
+    <button class="btn primary" id="sheetOk">Listo</button>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem("fyf:"+k); return v == null ? d : JSON.parse(v); }catch{ return d; } },
+  set(k, v){ try{ localStorage.setItem("fyf:"+k, JSON.stringify(v)); }catch{} }
+};
+const ars = n => "$" + Math.round(n).toLocaleString("es-AR");
+const num = n => Math.round(n).toLocaleString("es-AR");
+function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,1800); }
+
+/* ---------- pestañas ---------- */
+const tabs = document.querySelectorAll("nav button");
+function show(name){
+  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.tab===name));
+  ["trabajo","entreno","claude"].forEach(v => $("v-"+v).hidden = v!==name);
+  store.set("tab", name); window.scrollTo(0,0);
+}
+tabs.forEach(b => b.onclick = () => show(b.dataset.tab));
+
+/* ---------- frigorías ---------- */
+const EQUIPOS = [[2250,9000],[3000,12000],[4500,18000],[5500,22000],[6000,24000]];
+const FACTOR = {poco:42, medio:50, mucho:60}; // frigorías por m³ (techo 2,60 m)
+const calc = store.get("calc", {m2:16, p:2, sol:"medio"});
+function renderCalc(){
+  $("m2Out").innerHTML = calc.m2 + "<small>m²</small>";
+  $("pOut").textContent = calc.p;
+  document.querySelectorAll("#sunSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v===calc.sol));
+  const need = calc.m2 * 2.6 * FACTOR[calc.sol] + Math.max(0, calc.p-2) * 150;
+  $("frigOut").innerHTML = num(need) + "<small>fr/h</small>";
+  const eq = EQUIPOS.find(([f]) => f >= need*0.93);
+  $("eqOut").textContent = eq ? `${num(eq[0])} fr · ${num(eq[1])} BTU` : "2 equipos o central";
+  store.set("calc", calc);
+}
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+$("m2Minus").onclick = () => { calc.m2 = clamp(calc.m2-1, 6, 80); renderCalc(); };
+$("m2Plus").onclick  = () => { calc.m2 = clamp(calc.m2+1, 6, 80); renderCalc(); };
+$("pMinus").onclick  = () => { calc.p = clamp(calc.p-1, 1, 12); renderCalc(); };
+$("pPlus").onclick   = () => { calc.p = clamp(calc.p+1, 1, 12); renderCalc(); };
+document.querySelectorAll("#sunSeg button").forEach(b => b.onclick = () => { calc.sol = b.dataset.v; renderCalc(); });
+renderCalc();
+
+/* ---------- presupuesto ---------- */
+const DEFAULT_ITEMS = [
+  {id:"inst1", name:"Instalación split hasta 3.000 fr", price:180000},
+  {id:"inst2", name:"Instalación split 4.500–6.000 fr", price:240000},
+  {id:"metro", name:"Metro extra de cañería", price:25000, qty:true},
+  {id:"mens",  name:"Ménsula / soporte", price:30000},
+  {id:"gas",   name:"Carga de gas", price:60000},
+  {id:"desin", name:"Desinstalación", price:70000},
+  {id:"serv",  name:"Service y limpieza", price:50000},
+];
+let prices = store.get("prices", null);
+const items = DEFAULT_ITEMS.map(it => ({...it, price: prices?.[it.id] ?? it.price}));
+const sel = store.get("sel", {inst1:1, metro:2, mens:1});
+$("cliente").value = store.get("cliente", "");
+$("exNote").hidden = !!prices;
+
+function budgetText(){
+  const cli = $("cliente").value.trim();
+  const nom = store.get("nombre", "").trim();
+  const lines = items.filter(it => sel[it.id]).map(it => {
+    const q = it.qty ? sel[it.id] : 1;
+    return `• ${it.name}${it.qty ? ` (${q} m)` : ""}: ${ars(it.price*q)}`;
+  });
+  const tot = items.reduce((s,it) => s + (sel[it.id] ? it.price*(it.qty?sel[it.id]:1) : 0), 0);
+  return `Hola${cli ? " "+cli : ""}! Te paso el presupuesto:\n\n${lines.join("\n")}\n\nTotal: ${ars(tot)}\nValidez: 7 días.${nom ? "\n\n"+nom : ""}`;
+}
+function renderItems(){
+  const box = $("items"); box.innerHTML = "";
+  let tot = 0;
+  items.forEach(it => {
+    const on = !!sel[it.id];
+    const q = it.qty ? (sel[it.id]||0) : 1;
+    if (on) tot += it.price * q;
+    const row = document.createElement("div");
+    row.className = "item" + (on ? " on" : "");
+    row.innerHTML = `<button class="tick" aria-pressed="${on}" aria-label="${it.name}"><svg class="i"><use href="#i-check"/></svg></button>
+      <button class="name">${it.name}</button>
+      ${it.qty && on ? `<div class="qty"><button data-d="-1" aria-label="Menos metros"><svg class="i"><use href="#i-minus"/></svg></button><span>${q}</span><button data-d="1" aria-label="Más metros"><svg class="i"><use href="#i-plus"/></svg></button></div>` : ""}
+      <span class="price">${ars(it.price*(it.qty&&on?q:1))}</span>`;
+    const toggle = () => { if (sel[it.id]) delete sel[it.id]; else sel[it.id] = 1; save(); };
+    row.querySelector(".tick").onclick = toggle;
+    row.querySelector(".name").onclick = toggle;
+    row.querySelectorAll(".qty button").forEach(b => b.onclick = () => {
+      sel[it.id] = clamp(sel[it.id] + +b.dataset.d, 1, 40); save();
+    });
+    box.appendChild(row);
+  });
+  $("totalOut").textContent = ars(tot);
+  $("waBtn").href = "https://wa.me/?text=" + encodeURIComponent(budgetText());
+}
+function save(){ store.set("sel", sel); renderItems(); }
+$("cliente").oninput = () => { store.set("cliente", $("cliente").value); renderItems(); };
+$("copyBtn").onclick = () => {
+  const t = budgetText();
+  navigator.clipboard?.writeText(t).then(() => toast("Copiado"), () => fallbackCopy(t)) ?? fallbackCopy(t);
+};
+function fallbackCopy(t){
+  const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); toast("Copiado"); }catch{ toast("Mantené apretado para copiar"); }
+  ta.remove();
+}
+renderItems();
+
+/* ---------- ajustes ---------- */
+function openSheet(){
+  $("miNombre").value = store.get("nombre", "");
+  const box = $("priceRows"); box.innerHTML = "";
+  items.forEach(it => {
+    const r = document.createElement("label"); r.className = "prow";
+    r.innerHTML = `<span>${it.name}</span><input class="field" inputmode="numeric" id="pr-${it.id}" value="${it.price}">`;
+    box.appendChild(r);
+  });
+  $("sheet").hidden = false;
+}
+function closeSheet(){
+  store.set("nombre", $("miNombre").value);
+  const p = {};
+  items.forEach(it => { const v = parseInt($("pr-"+it.id).value.replace(/\D/g,""),10); if (!isNaN(v)) it.price = v; p[it.id] = it.price; });
+  store.set("prices", p); prices = p; $("exNote").hidden = true;
+  $("sheet").hidden = true; renderItems();
+}
+$("gearBtn").onclick = openSheet; $("exEdit").onclick = openSheet; $("sheetOk").onclick = closeSheet;
+$("sheet").onclick = e => { if (e.target === $("sheet")) closeSheet(); };
+
+/* ---------- entreno ---------- */
+const FA = [
+  ["Sentadilla a la silla con mancuerna","3×10","Bajá hasta tocar la silla, pecho arriba."],
+  ["Press de pecho en máquina","3×10–12","Bajá lento, dos segundos."],
+  ["Remo con mancuerna apoyado","3×10 c/lado","Espalda recta, el codo va hacia el bolsillo."],
+  ["Peso muerto rumano","3×10","Cola atrás, espalda recta. Es el gesto de levantar una condensadora bien."],
+  ["Plancha","3×20–30 s","Cola apretada, sin hundir la cintura."],
+];
+const FB = [
+  ["Prensa de piernas","3×12","No trabes las rodillas arriba."],
+  ["Jalón al pecho","3×10–12","Tirá con los codos hacia abajo, pecho afuera."],
+  ["Press de hombros sentado","3×10","Si molesta el hombro, menos peso o salteala."],
+  ["Puente de glúteos","3×12","Apretá arriba un segundo."],
+  ["Paseo del granjero","3×30 m","Mancuernas pesadas, caminá derecho. Como cargar equipos, pero parejo."],
+];
+// índice JS: 0=dom
+const PLAN = {
+  1:{t:"Fuerza A", s:"45 min · peso que te deje 2–3 reps de resto", i:"i-dumb", ex:FA},
+  2:{t:"Natación", s:"30–40 min suave · 4×100 tranquilo + técnica", i:"i-swim"},
+  3:{t:"Caminata", s:"45 min a ritmo de charla", i:"i-walk"},
+  4:{t:"Fuerza B", s:"45 min · peso que te deje 2–3 reps de resto", i:"i-dumb", ex:FB},
+  5:{t:"Natación", s:"30–40 min · variá estilos", i:"i-swim"},
+  6:{t:"Caminata larga", s:"60–75 min · parque o costanera", i:"i-walk"},
+  0:{t:"Descanso", s:"10 min de estiramiento y listo", i:"i-rest"},
+};
+const DN = ["D","L","M","M","J","V","S"];
+const today = new Date().getDay();
+let selDay = today;
+const weekKey = (() => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d.toISOString().slice(0,10); })();
+function renderWeek(){
+  const w = $("week"); w.innerHTML = "";
+  [1,2,3,4,5,6,0].forEach(d => {
+    const b = document.createElement("button");
+    b.className = "day" + (d===today ? " today" : "");
+    b.setAttribute("aria-pressed", d===selDay);
+    b.setAttribute("aria-label", PLAN[d].t);
+    b.innerHTML = `${DN[d]}<svg class="i"><use href="#${PLAN[d].i}"/></svg>`;
+    b.onclick = () => { selDay = d; renderWeek(); };
+    w.appendChild(b);
+  });
+  const p = PLAN[selDay];
+  $("dTitle").textContent = p.t; $("dSub").textContent = p.s;
+  $("dIco").innerHTML = `<use href="#${p.i}"/>`;
+  const list = $("exList"); list.innerHTML = "";
+  $("timerBtn").hidden = !p.ex;
+  if (!p.ex) return;
+  const dk = "done:"+weekKey+":"+selDay;
+  const done = store.get(dk, []);
+  p.ex.forEach(([n, r, cue], i) => {
+    const row = document.createElement("div");
+    const isDone = done.includes(i);
+    row.className = "exr" + (isDone ? " done" : "");
+    row.innerHTML = `<button class="tick" aria-pressed="${isDone}" aria-label="Hecho: ${n}"><svg class="i"><use href="#i-check"/></svg></button>
+      <button class="n"><span>${n}</span></button><span class="reps">${r}</span>
+      <div class="cue" hidden>${cue}</div>`;
+    row.querySelector(".tick").onclick = () => {
+      const d = store.get(dk, []); const k = d.indexOf(i);
+      k >= 0 ? d.splice(k,1) : d.push(i); store.set(dk, d); renderWeek();
+    };
+    row.querySelector(".n").onclick = () => { const c = row.querySelector(".cue"); c.hidden = !c.hidden; };
+    list.appendChild(row);
+  });
+}
+renderWeek();
+
+let tInt = null, tLeft = 0, actx = null;
+function beep(){
+  try{ actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    [0, .25, .5].forEach(t => { const o = actx.createOscillator(), g = actx.createGain();
+      o.frequency.value = 880; o.connect(g); g.connect(actx.destination);
+      g.gain.setValueAtTime(.2, actx.currentTime+t); g.gain.exponentialRampToValueAtTime(.001, actx.currentTime+t+.2);
+      o.start(actx.currentTime+t); o.stop(actx.currentTime+t+.2); });
+  }catch{}
+  try{ navigator.vibrate?.([200,100,200]); }catch{}
+}
+function fmt(s){ return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); }
+$("timerBtn").onclick = () => {
+  if (tInt){ clearInterval(tInt); tInt = null; $("timerBtn").classList.remove("run"); $("timerTxt").textContent = "Descanso 1:30"; return; }
+  try{ actx = actx || new (window.AudioContext||window.webkitAudioContext)(); actx.resume(); }catch{}
+  tLeft = 90; $("timerBtn").classList.add("run"); $("timerTxt").textContent = fmt(tLeft);
+  tInt = setInterval(() => {
+    tLeft--; $("timerTxt").textContent = fmt(tLeft);
+    if (tLeft <= 0){ clearInterval(tInt); tInt = null; beep(); $("timerBtn").classList.remove("run"); $("timerTxt").textContent = "¡Dale, otra serie!"; setTimeout(()=>{ if(!tInt) $("timerTxt").textContent = "Descanso 1:30"; }, 3000); }
+  }, 1000);
+};
+
+/* ---------- Claude (abre claude.ai con la pregunta lista) ---------- */
+const CTX = "Soy instalador de aires acondicionados (splits) en Buenos Aires. No soy de la compu, uso solo el celular: contestame simple, en castellano rioplatense, corto (máximo 8 líneas), con pasos si sirve. Si hay riesgo eléctrico, de altura o de gas, avisame. Hago natación y caminatas y estoy empezando musculación.\n\nMi pregunta: ";
+function ask(q){
+  q = q.trim(); if (!q) { $("ask").focus(); return; }
+  const url = "https://claude.ai/new?q=" + encodeURIComponent(CTX + q);
+  const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+  $("ask").value = "";
+}
+$("sendBtn").onclick = () => ask($("ask").value);
+$("ask").addEventListener("keydown", e => { if (e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask($("ask").value); } });
+$("ask").addEventListener("input", () => { const t=$("ask"); t.style.height="auto"; t.style.height=Math.min(t.scrollHeight,140)+"px"; });
+document.querySelectorAll("#chips .chip").forEach(c => c.onclick = () => ask(c.textContent));
+
+/* ---------- instalar + sin conexión ---------- */
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; $("installBtn").hidden = false; });
+window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("¡Instalada!"); });
+$("installBtn").onclick = async () => {
+  if (!installEvt) return;
+  installEvt.prompt(); await installEvt.userChoice.catch(()=>{}); installEvt = null; $("installBtn").hidden = true;
+};
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
+
+show(store.get("tab", "trabajo"));
+})();
+</script>
+</body>
+</html>

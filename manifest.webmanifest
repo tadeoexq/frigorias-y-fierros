@@ -1,0 +1,17 @@
+{
+  "name": "Frigorías y Fierros",
+  "short_name": "Frigorías",
+  "description": "Frigorías, presupuestos por WhatsApp y entrenamiento.",
+  "lang": "es-AR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F1F4F3",
+  "theme_color": "#B0562A",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
