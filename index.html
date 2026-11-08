@@ -4,158 +4,292 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Frigorías y Fierros</title>
-<meta name="description" content="Frigorías, presupuestos y entrenamiento en el bolsillo.">
-<meta name="theme-color" content="#F1F4F3" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#101413" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Frigorías, presupuestos, clientes y entrenamiento en el bolsillo.">
+<meta name="theme-color" content="#F5F4F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121514" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap">
 <style>
-/* Layout: app de una columna para celular, barra de pestañas abajo, una tarjeta por herramienta. Acento cobre = caño de cobre del split. */
+/* Una columna para celular. Arriba: título de la pestaña. Abajo: 5 pestañas.
+   Regla de color: el cobre (caño del split) marca solo lo que se toca primero, lo elegido y la pestaña activa.
+   Escala: texto 14/15/17/19/24, números 28/46 (cifras parejas solo en Bricolage: en Atkinson se ven de máquina de escribir). Espacios 4·8·12·16·24·32. */
 :root{
-  --bg:#F1F4F3; --surface:#FFFFFF; --ink:#17201E; --muted:#68736F; --line:#DCE2DF;
-  --accent:#B0562A; --accent-ink:#FFFFFF; --accent-soft:#F5E6DC; --ok:#2E7A58;
+  --bg:#F5F4F0; --surface:#FFFFFF; --raised:#FFFFFF; --well:#EAE8E2;
+  --ink:#1B1F1D; --muted:#596059; --line:#E2DED6; --edge:#C2BDB3;
+  --accent:#A04B20; --accent-ink:#FFFFFF; --accent-soft:#F5E4D8; --ok:#28704F; --ok-soft:#DFEFE6; --warn:#B0331A;
+  --shadow:0 1px 2px rgba(40,30,20,.09);
   --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --body:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --r:14px;
+  --fs-xs:14px; --fs-s:15px; --fs:17px; --fs-m:19px; --fs-l:24px; --fs-n:28px; --fs-xl:46px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --r-s:10px; --r:14px; --r-l:22px;
+  --tap:48px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#101413; --surface:#181E1C; --ink:#E8EDEB; --muted:#93A09B; --line:#2A3330;
-  --accent:#E38A5B; --accent-ink:#1B0F08; --accent-soft:#38241A; --ok:#5DBA8C; color-scheme:dark}}
+  --bg:#121514; --surface:#1A1F1D; --raised:#333C38; --well:#232A27;
+  --ink:#ECEFEC; --muted:#A3ACA7; --line:#2A312E; --edge:#47514C;
+  --accent:#E3895A; --accent-ink:#1A0E07; --accent-soft:#3B2619; --ok:#65C093; --ok-soft:#183427; --warn:#F2866C;
+  --shadow:none; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#101413; --surface:#181E1C; --ink:#E8EDEB; --muted:#93A09B; --line:#2A3330;
-  --accent:#E38A5B; --accent-ink:#1B0F08; --accent-soft:#38241A; --ok:#5DBA8C; color-scheme:dark}
+  --bg:#121514; --surface:#1A1F1D; --raised:#333C38; --well:#232A27;
+  --ink:#ECEFEC; --muted:#A3ACA7; --line:#2A312E; --edge:#47514C;
+  --accent:#E3895A; --accent-ink:#1A0E07; --accent-soft:#3B2619; --ok:#65C093; --ok-soft:#183427; --warn:#F2866C;
+  --shadow:none; color-scheme:dark}
 
 html,body{height:100%}
 :root{color-scheme:light;padding-top:env(safe-area-inset-top,0px)}
 [hidden]{display:none!important}
 img{max-width:100%}
-body{margin:0;overscroll-behavior-y:none;background:var(--bg);color:var(--ink);font:17px/1.45 var(--body);-webkit-tap-highlight-color:transparent}
 *{box-sizing:border-box}
+body{margin:0;overscroll-behavior-y:none;background:var(--bg);color:var(--ink);font:var(--fs)/1.45 var(--body);-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
 button,input,textarea{font:inherit;color:inherit}
-button{cursor:pointer;background:none;border:0;padding:0}
+button{cursor:pointer;background:none;border:0;padding:0;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+button:disabled{cursor:default;opacity:.35}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 svg.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+h1,h2,h3,h4,p{margin:0}
 
-.app{max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px calc(96px + env(safe-area-inset-bottom,0px))}
-header{display:flex;align-items:center;justify-content:space-between;padding-block:6px 18px}
-.brand{font:800 22px/1 var(--display);letter-spacing:-.01em}
-.brand b{color:var(--accent);font-weight:800}
-.iconbtn{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;color:var(--muted);border:1px solid var(--line)}
-.iconbtn:active{background:var(--accent-soft)}
+.app{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:4px calc(112px + env(safe-area-inset-bottom,0px))}
 
-.view{display:flex;flex-direction:column;gap:18px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:18px}
-.card h2{margin:0;font:600 15px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
-.card h2 svg{width:18px;height:18px}
+/* encabezado: dónde estoy + ajustes */
+.top{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);min-height:72px}
+.top h1{font:800 var(--fs-l)/1.1 var(--display);letter-spacing:-.015em}
+.hbtn{display:inline-flex;align-items:center;gap:8px;min-height:var(--tap);padding:0 16px 0 12px;border:1px solid var(--edge);border-radius:999px;background:var(--surface);font-size:var(--fs-s);font-weight:700}
+.hbtn svg{width:20px;height:20px;color:var(--muted)}
+.installbar{display:flex;align-items:center;gap:var(--s3);width:100%;min-height:60px;margin-bottom:var(--s4);padding:8px 8px 8px 14px;border:1px solid var(--accent);border-radius:var(--r);background:var(--accent-soft);text-align:left;font-size:var(--fs-s)}
+.installbar svg{color:var(--accent)}
+.installbar span{flex:1}
+.installbar b{background:var(--accent);color:var(--accent-ink);border-radius:var(--r-s);padding:10px 14px}
 
-/* stepper */
-.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.lbl{color:var(--muted);display:flex;align-items:center;gap:8px}
-.step{display:flex;align-items:center;gap:6px}
-.step button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}
-.step button:active{background:var(--accent-soft)}
-.step output{min-width:58px;text-align:center;font:800 26px/1 var(--display);font-variant-numeric:tabular-nums}
-.step output small{font:400 13px var(--body);color:var(--muted);margin-left:2px}
+.view,.pane{display:flex;flex-direction:column;gap:var(--s5)}
+.stack{display:flex;flex-direction:column;gap:var(--s4)}
+.block{display:flex;flex-direction:column;gap:var(--s4)}
+h2{font:700 var(--fs-m)/1.25 var(--display);letter-spacing:-.005em;display:flex;align-items:baseline;gap:10px}
+h2 .cnt{margin-left:auto;font:700 var(--fs) var(--body)}
 
-/* segmented */
-.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
-.seg button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;border-radius:9px;color:var(--muted);font-size:13px}
-.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+/* sub-secciones: pestañas subrayadas (navegación, no elección) */
+.subnav{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border-bottom:1px solid var(--line);margin-top:-4px}
+.subnav button{position:relative;min-height:52px;padding:6px 2px 10px;font-size:16px;font-weight:700;color:var(--muted)}
+.subnav button[aria-pressed="true"]{color:var(--ink)}
+.subnav button[aria-pressed="true"]::after{content:"";position:absolute;left:14%;right:14%;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:var(--accent)}
 
-.result{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
-.big{font:800 44px/1 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.big small{font:600 16px var(--body);color:var(--muted);margin-left:4px;letter-spacing:0}
-.pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
-.sub{color:var(--muted);font-size:14px}
+/* filas de formulario: etiqueta a la izquierda, control a la derecha */
+.rows{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
+.rows .row{min-height:68px;padding:8px 0}
+.rows .row + .row{border-top:1px solid var(--line)}
+.lbl{display:flex;align-items:center;gap:10px;flex:1;min-width:0;font-size:var(--fs)}
+.lbl svg{width:20px;height:20px;color:var(--muted)}
+.lbl small{display:block;font-size:var(--fs-xs);color:var(--muted);line-height:1.3}
+.cap{font-size:var(--fs-s);color:var(--muted);font-weight:700}
 
-/* presupuesto */
-.field{width:100%;border:1px solid var(--line);background:transparent;border-radius:12px;padding:12px 14px}
-.field::placeholder{color:var(--muted)}
+/* stepper − 16 + */
+.step{display:flex;align-items:center;gap:4px;flex:none}
+.step button,.qty button{width:var(--tap);height:var(--tap);border-radius:50%;border:1px solid var(--edge);background:var(--surface);color:var(--ink);display:grid;place-items:center;-webkit-touch-callout:none}
+.step button:active,.qty button:active{background:var(--accent-soft);border-color:var(--accent)}
+.step output{min-width:58px;text-align:center;font:800 var(--fs-n)/1 var(--display);font-variant-numeric:tabular-nums}
+.step output small{font:400 var(--fs-xs) var(--body);color:var(--muted);margin-left:2px}
+
+/* segmentado (elegir una opción) */
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--well);border-radius:var(--r);padding:4px;gap:4px}
+.seg button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:var(--tap);padding:6px 4px;border-radius:var(--r-s);color:var(--muted);font-size:var(--fs-s);font-weight:700;line-height:1.15}
+.seg button[aria-pressed="true"]{background:var(--raised);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--accent),var(--shadow)}
+.seg button[aria-pressed="true"] svg{color:var(--accent)}
+.seg.g2{grid-auto-flow:row;grid-template-columns:1fr 1fr}
+.seg.tall button{min-height:64px}
+.row .seg{flex:none;min-width:172px}
+
+/* resultado */
+.answer{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4) var(--s4) 18px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
+.alab{font-size:var(--fs-s);color:var(--muted)}
+.big{font:800 var(--fs-xl)/1.02 var(--display);letter-spacing:-.025em;font-variant-numeric:tabular-nums}
+.big small,.step output small{font-variant-numeric:normal}
+.big small{font:700 var(--fs-m) var(--body);color:var(--muted);margin-left:6px;letter-spacing:0}
+.sub{color:var(--muted);font-size:var(--fs-s)}
+.answer .more{border-top:1px solid var(--line);margin-top:8px;padding-top:12px;font-size:var(--fs-s)}
+.tip{display:flex;gap:10px;align-items:flex-start;color:var(--muted);font-size:var(--fs-s)}
+.tip svg{width:18px;height:18px;margin-top:2px}
+.hint{font-size:var(--fs-s);color:var(--muted);display:flex;align-items:center;gap:8px}
+.hint svg{width:18px;height:18px}
+.save{display:flex;align-items:center;gap:8px;color:var(--ok);font-weight:700;justify-content:center}
+.save svg{width:20px;height:20px;stroke-width:2.4}
+
+/* campos */
+.field{width:100%;min-height:54px;border:1px solid var(--edge);background:var(--surface);border-radius:var(--r-s);padding:12px 14px;font-size:var(--fs)}
+.field:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.field::placeholder{color:var(--muted);opacity:.9}
+.search{position:relative}
+.search:has(> .field[hidden]){display:none}
+.search svg{position:absolute;left:14px;top:16px;color:var(--muted);pointer-events:none}
+.search .field{padding-left:46px}
+
+/* listas con casilla */
 .items{display:flex;flex-direction:column}
-.item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);min-height:56px}
-.item:last-child{border-bottom:0}
-.tick{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none;color:transparent}
-.tick svg{width:18px;height:18px;stroke-width:2.6}
+.item{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:14px;row-gap:4px;padding:6px 0;min-height:62px;border-top:1px solid var(--line)}
+.item:last-child{border-bottom:1px solid var(--line)}
+.tick{position:relative;width:30px;height:30px;border-radius:8px;border:2px solid var(--edge);background:var(--surface);display:grid;place-items:center;flex:none;color:transparent}
+.tick::after{content:"";position:absolute;inset:-10px}
+.tick svg{width:18px;height:18px;stroke-width:2.8}
 .item.on .tick{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.item .name{flex:1;min-width:0;text-align:left}
-.item .price{color:var(--muted);font-variant-numeric:tabular-nums;font-size:15px}
-.item.on .price{color:var(--ink)}
+.item .name{min-width:0;min-height:var(--tap);padding:10px 0;text-align:left}
+.item .price{color:var(--muted);font-size:var(--fs-s);text-align:right}
+.item.on .price{color:var(--ink);font-weight:700}
+.item .qty{grid-column:2 / 4;grid-row:2;padding-bottom:8px}
+.item .x{width:var(--tap);height:var(--tap);margin-right:-12px;display:grid;place-items:center;color:var(--muted)}
+.item .x svg{width:18px;height:18px}
 .qty{display:flex;align-items:center;gap:4px}
-.qty button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}
-.qty button svg{width:16px;height:16px}
-.qty span{min-width:22px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
-.note{font-size:13px;color:var(--accent);background:var(--accent-soft);border-radius:10px;padding:8px 12px;display:flex;gap:8px;align-items:center}
-.note button{text-decoration:underline;color:inherit;font-weight:700}
-.total{display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid var(--line);padding-top:16px}
-.actions{display:grid;grid-template-columns:1fr auto;gap:10px}
-.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;border-radius:14px;font-weight:700;padding:0 18px;text-decoration:none}
+.qty span{min-width:64px;text-align:center;font-weight:700}
+.note{font-size:var(--fs-s);background:var(--accent-soft);border-radius:var(--r-s);padding:6px 6px 6px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.note button{min-height:44px;padding:0 10px;font-weight:700;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.total{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.total span:first-child{font-weight:700}
+#totalOut{font-size:38px}
+
+/* botones */
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:56px;border-radius:var(--r);font-weight:700;font-size:var(--fs);padding:0 20px;text-decoration:none;text-align:center}
 .btn.primary{background:var(--accent);color:var(--accent-ink)}
-.btn.ghost{border:1px solid var(--line);color:var(--ink)}
+.btn.ghost{border:1px solid var(--edge);background:var(--surface);color:var(--ink)}
+.btn.sm{min-height:var(--tap);font-size:var(--fs-s);padding:0 14px;border-radius:var(--r-s)}
+.btn.quiet{min-height:var(--tap);padding:0;justify-content:flex-start;color:var(--ink)}
+.btn.quiet svg{color:var(--accent)}
+.btn.icon{flex-direction:column;gap:2px;min-width:64px;padding:0 6px;font-size:var(--fs-xs)}
+.actions .btn.primary{padding:0 12px;gap:8px;white-space:nowrap}
+.btn.danger{color:var(--warn)}
+.btn.danger.armed{background:var(--warn);border-color:var(--warn);color:var(--surface)}
 .btn:active{transform:scale(.98)}
+.actions{display:grid;grid-template-columns:1fr auto;gap:10px}
+
+/* trabajos */
+.job{display:grid;grid-template-columns:1fr auto 20px;column-gap:12px;row-gap:2px;align-items:center;width:100%;min-height:72px;padding:12px 0;border-top:1px solid var(--line);text-align:left}
+.job:last-child{border-bottom:1px solid var(--line)}
+.job .jn{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.job .m{font-weight:700;text-align:right}
+.job .s{color:var(--muted);font-size:var(--fs-s);min-width:0}
+.job .st{font-size:var(--fs-s);font-weight:700;justify-self:end;display:inline-flex;align-items:center;gap:4px}
+.job .st svg{width:16px;height:16px;stroke-width:2.6}
+.job .chev{grid-column:3;grid-row:1 / 3;width:20px;height:20px;color:var(--muted)}
+.st.ok{color:var(--ok)}
+.st.debe{color:var(--accent)}
+.alert{background:var(--accent-soft);border-radius:var(--r);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2)}
+.due{display:flex;flex-direction:column;gap:10px;padding:12px 0;border-top:1px solid var(--line)}
+.alert .due{border-top-color:rgba(160,75,32,.22)}
+.due:last-child{padding-bottom:0}
+.due b{display:block}
+.due .s{color:var(--muted);font-size:var(--fs-s)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.act{display:flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);border-radius:var(--r-s);border:1px solid var(--edge);background:var(--surface);font-size:var(--fs-s);font-weight:700}
+.act svg{width:20px;height:20px}
+.act.wa{border-color:var(--accent);color:var(--accent)}
+.act.okb svg{color:var(--ok);stroke-width:2.4}
+.empty{color:var(--muted);text-align:center;padding:var(--s5) var(--s3);font-size:var(--fs-s);line-height:1.5}
+.empty b{display:block;color:var(--ink);font-size:var(--fs);margin-bottom:4px}
+.month{display:flex;align-items:center;justify-content:space-between}
+.month span{font:700 var(--fs-m) var(--display);text-transform:capitalize}
+.navbtn{width:var(--tap);height:var(--tap);border-radius:50%;border:1px solid var(--edge);background:var(--surface);display:grid;place-items:center}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px;border-top:1px solid var(--line);margin-top:10px;padding-top:12px}
+.split small{display:block;color:var(--muted);font-size:var(--fs-s)}
+.split b{font:800 22px/1.2 var(--display);font-variant-numeric:tabular-nums}
+
+/* hojas (ajustes, trabajo) */
+.sheet{position:fixed;inset:0;background:rgba(10,12,11,.5);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet .panel{background:var(--surface);width:100%;max-width:560px;border-radius:var(--r-l) var(--r-l) 0 0;max-height:92%;overflow:auto;overscroll-behavior:contain;padding-block:0 calc(24px + env(safe-area-inset-bottom,0px));padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:var(--s4)}
+.sh-h{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0 8px;background:var(--surface)}
+.sheet h3{font:800 var(--fs-l)/1.1 var(--display)}
+.sheet h4{font:700 var(--fs-m) var(--display);margin-top:8px}
+.close{width:var(--tap);height:var(--tap);margin-right:-4px;border-radius:50%;border:1px solid var(--edge);display:grid;place-items:center}
+.f{display:flex;flex-direction:column;gap:6px;font-size:var(--fs-s);font-weight:700;color:var(--muted)}
+.f small{font-size:var(--fs-s);font-weight:400}
+.f .field{color:var(--ink);font-weight:400}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.prow{display:grid;grid-template-columns:1fr 128px;gap:12px;align-items:center;font-size:var(--fs-s)}
+.prow input{text-align:right}
+.sig{text-align:center;font-size:var(--fs-xs);color:var(--muted)}
+.sig b{font-family:var(--display);color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{min-height:var(--tap);padding:0 16px;border:1px solid var(--edge);border-radius:999px;background:var(--surface);font-size:var(--fs-s);font-weight:700}
+.chip:active{background:var(--accent-soft)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+
+/* taller */
+.prog{color:var(--muted);font-size:var(--fs-s);font-weight:700}
+.prog.ok{color:var(--ok)}
+.code{display:grid;grid-template-columns:72px 1fr;column-gap:14px;row-gap:3px;padding:14px 0;border-top:1px solid var(--line)}
+.code:last-child{border-bottom:1px solid var(--line)}
+.code .c{grid-row:1 / span 3;font:800 22px/1.15 var(--display);overflow-wrap:anywhere}
+.code .t{font-weight:700}
+.code .h{font-size:var(--fs-s)}
+.code .v{font-size:var(--fs-xs);color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.code .del{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 10px;margin-left:auto;border:1px solid var(--edge);border-radius:var(--r-s);color:var(--ink);font-weight:700}
+.code .del svg{width:16px;height:16px}
+.ncform{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:var(--s4)}
 
 /* entreno */
-.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.day{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0 9px;border-radius:12px;color:var(--muted);font-size:13px;border:1px solid transparent}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.day{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:76px;padding:10px 0 16px;border-radius:var(--r-s);color:var(--muted);font-size:var(--fs-s);font-weight:700}
 .day svg{width:20px;height:20px}
-.day.today{color:var(--ink);font-weight:700}
-.day[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.day.today{color:var(--ink)}
+.day.today::after{content:"";position:absolute;bottom:6px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.day[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--accent)}
 .dayhead{display:flex;align-items:center;gap:14px}
 .dayhead .ico{width:52px;height:52px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
 .dayhead .ico svg{width:26px;height:26px}
-.dayhead h3{margin:0;font:800 24px/1.1 var(--display)}
-.dayhead p{margin:3px 0 0;color:var(--muted);font-size:15px}
+.dayhead h3{font:800 var(--fs-l)/1.1 var(--display)}
+.dayhead p{margin-top:4px;color:var(--muted);font-size:var(--fs-s)}
 .ex{display:flex;flex-direction:column}
-.exr{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
-.exr:last-child{border-bottom:0}
-.exr .n{text-align:left;min-width:0}
-.exr .n span{display:block}
-.exr .reps{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-.exr.done .n span:first-child{color:var(--muted);text-decoration:line-through}
-.exr.done .tick{background:var(--ok);border-color:var(--ok);color:#fff}
-.cue{grid-column:2 / 4;font-size:14px;color:var(--muted);margin-top:-4px}
-.timer{font-variant-numeric:tabular-nums}
+.exr{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:8px;align-items:start;padding:10px 0 12px;border-top:1px solid var(--line)}
+.exr:last-child{border-bottom:1px solid var(--line)}
+.exr .tick{grid-row:1;margin-top:9px}
+.exr .n{grid-column:2;display:flex;align-items:flex-start;gap:8px;min-width:0;min-height:var(--tap);padding:4px 0;text-align:left}
+.exr .n .tx{flex:1;min-width:0}
+.exr .n .tx span{display:block}
+.exr .n .reps{font-size:var(--fs-s);color:var(--muted)}
+.exr .n .chev{width:22px;height:22px;margin-top:2px;color:var(--muted)}
+.exr .n[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.exr .qty,.exr .up,.exr .cue{grid-column:2}
+.exr.done .tx span:first-child{color:var(--muted);text-decoration:line-through}
+.exr.done .tick{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.cue{font-size:var(--fs-s);background:var(--well);border-radius:var(--r-s);padding:10px 12px}
+.up{justify-self:start;min-height:44px;padding:0 14px;border:1px solid var(--accent);border-radius:var(--r-s);color:var(--accent);font-size:var(--fs-s);font-weight:700}
+.timer{min-width:0}
 .timer.run{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.info{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
-.info svg{width:18px;height:18px}
+.counter{display:grid;grid-template-columns:56px 1fr 56px;align-items:center;justify-items:center}
+.counter .plus{width:164px;height:164px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:var(--shadow)}
+.counter .plus b{font:800 60px/1 var(--display);font-variant-numeric:tabular-nums}
+.counter .plus small{font-size:var(--fs-s);font-weight:700}
+.counter .minus{width:56px;height:56px;border-radius:50%;border:1px solid var(--edge);background:var(--surface);display:grid;place-items:center}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr)}
+.stats3 .stat{padding:2px 8px;text-align:center}
+.stats3 .stat + .stat{border-left:1px solid var(--line)}
+.stat b{display:block;font:800 22px/1.25 var(--display);font-variant-numeric:tabular-nums}
+.stat small{display:block;color:var(--muted);font-size:var(--fs-s)}
 
 /* claude */
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);border-radius:999px;padding:9px 14px;font-size:15px;text-align:left}
-.chip:active{background:var(--accent-soft)}
-.chat{display:flex;flex-direction:column;gap:12px}
-.msg{padding:12px 14px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere;max-width:92%}
-.msg.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
-.msg.ai{align-self:flex-start;background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px}
-.msg.ai.wait{color:var(--muted)}
 .composer{display:flex;gap:8px;align-items:flex-end}
-.composer textarea{flex:1;min-width:0;resize:none;border:1px solid var(--line);background:transparent;border-radius:14px;padding:12px 14px;min-height:52px;max-height:140px}
-.composer .iconbtn{width:52px;height:52px;flex:none}
-.composer .send{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.photo{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
-.photo img{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.composer .field{flex:1;min-width:0}
+.composer textarea{flex:1;min-width:0;resize:none;min-height:56px;max-height:160px;border:1px solid var(--edge);background:var(--surface);border-radius:var(--r);padding:14px;font-size:var(--fs)}
+.composer textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.send{width:56px;height:56px;flex:none;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.addb{width:54px;height:54px;flex:none;border-radius:var(--r-s);border:1px solid var(--edge);background:var(--surface);display:grid;place-items:center}
+.sugg{display:flex;flex-direction:column}
+.sugg .chip{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:10px 0;border:0;border-top:1px solid var(--line);border-radius:0;background:none;box-shadow:none;font-size:var(--fs);font-weight:400;text-align:left}
+.sugg .chip:last-child{border-bottom:1px solid var(--line)}
+.sugg .chip svg{width:20px;height:20px;color:var(--muted)}
 
-/* tabs */
-nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
-nav .in{max-width:520px;margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr}
-nav button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 12px;color:var(--muted);font-size:12px;letter-spacing:.02em}
-nav button svg{width:24px;height:24px}
-nav button[aria-selected="true"]{color:var(--accent);font-weight:700}
-
-/* hoja de ajustes */
-.sheet{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center;z-index:20}
-.sheet .panel{background:var(--surface);width:100%;max-width:520px;border-radius:20px 20px 0 0;max-height:88%;overflow:auto;padding-block:20px calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
-.sheet h3{margin:0;font:800 20px var(--display)}
-.prow{display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:center;font-size:15px}
-.prow input{text-align:right;font-variant-numeric:tabular-nums}
-.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:30}
-@media (prefers-reduced-motion: no-preference){.btn,.chip{transition:transform .1s}}
-.hdr-r{display:flex;gap:8px}
-.install{border-color:var(--accent);color:var(--accent)}
-.hint{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
-.hint svg{width:16px;height:16px}
+/* pestañas de abajo */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(4px,env(safe-area-inset-left,0px));padding-right:max(4px,env(safe-area-inset-right,0px))}
+nav .in{max-width:560px;margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr}
+nav button{display:flex;flex-direction:column;align-items:center;gap:4px;min-height:68px;padding:8px 0 10px;color:var(--muted);font-size:var(--fs-xs);font-weight:700}
+nav .ic{display:grid;place-items:center;width:56px;height:32px;border-radius:999px}
+nav .ic svg{width:24px;height:24px}
+nav button[aria-selected="true"]{color:var(--ink)}
+nav button[aria-selected="true"] .ic{background:var(--accent-soft);color:var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:30;width:max-content;max-width:calc(100% - 32px);min-height:52px;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 18px;border-radius:var(--r);background:var(--ink);color:var(--bg);font-size:var(--fs-s);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.toast span{padding-right:10px}
+.toast button{min-height:40px;padding:0 12px;border-radius:var(--r-s);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+@media (prefers-reduced-motion: no-preference){.btn,.chip,.act{transition:transform .1s}.exr .n .chev{transition:transform .15s}}
 </style>
 </head>
 <body>
@@ -168,132 +302,373 @@ nav button[aria-selected="true"]{color:var(--accent);font-weight:700}
   <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-area" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="1.5"/><path d="M3.5 9h4M3.5 15h2M9 3.5v3M15 3.5v2"/></symbol>
   <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.6c2.3 0 4 1.5 4.5 4.4"/></symbol>
   <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18.5h10a4 4 0 0 0 .6-8 5.5 5.5 0 0 0-10.7 1.4A3.4 3.4 0 0 0 7 18.5Z"/></symbol>
   <symbol id="i-sunlow" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H12l-1 8 8.5-11H12Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6.5 7 6.5 11.5a6.5 6.5 0 0 1-13 0C5.5 10 12 3 12 3Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M3.5 15.5 15.5 3.5l5 5-12 12Z"/><path d="m7 12 2 2M10 9l2 2M13 6l2 2"/></symbol>
   <symbol id="i-msg" viewBox="0 0 24 24"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.5-4.3A8.5 8.5 0 1 1 20.5 11.6Z"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2"/><path d="M15.5 8.5V5.5a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3"/></symbol>
   <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5.5 3.5h13v17l-2.2-1.5-2.1 1.5-2.2-1.5-2.2 1.5-2.1-1.5-2.2 1.5Z"/><path d="M9 8.5h6M9 12h6M9 15.5h3"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a4 4 0 0 0 5 5l-9 9a2.1 2.1 0 0 1-3-3l9-9a4 4 0 0 1-2-2Zm0 0 2.5-3a4 4 0 0 1 3.5 3.5l-3 2.5"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M14.5 9.2c-.5-.9-1.5-1.4-2.6-1.4-1.5 0-2.6.8-2.6 2s1.1 1.7 2.6 2 2.7.8 2.7 2.1-1.2 2.1-2.7 2.1c-1.2 0-2.2-.5-2.7-1.5M12 6.3v1.5M12 16.5V18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
   <symbol id="i-swim" viewBox="0 0 24 24"><path d="M2.5 17c1.6 0 1.6 1.3 3.2 1.3S7.3 17 8.9 17s1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3 1.6 1.3 3.2 1.3 1.6-1.3 3.2-1.3"/><circle cx="17" cy="7" r="2"/><path d="m4.5 13.5 5-3.5 2.5 2.5 3.5-2"/></symbol>
   <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="1.8"/><path d="m10.5 21 2-6 2.5 2.5V21M8 12.5l1.5-4.5 4 1 2 3 2.5 1M12.5 15l1-5.5"/></symbol>
   <symbol id="i-rest" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></symbol>
   <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 1.5M9.5 2.5h5"/></symbol>
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-4 16-4-6.5Z"/><path d="m12 13.5 8-9.5"/></symbol>
-  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M3.5 8.5a2 2 0 0 1 2-2h2l1.5-2h6l1.5 2h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2Z"/><circle cx="12" cy="12.5" r="3.5"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.2"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5M4.5 19.5h15"/></symbol>
   <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5 11 13M17 14v4.5a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 4 18.5v-10A1.5 1.5 0 0 1 5.5 7H10"/></symbol>
-  <symbol id="i-heart"viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 6.5h15M9.5 6.5V4.5h5v2M6.5 6.5l1 13h9l1-13"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7 4.5 11.5 9 16"/><path d="M4.5 11.5H15a4.5 4.5 0 0 1 0 9h-3"/></symbol>
 </svg>
 
 <div class="app">
-  <header>
-    <div class="brand">Frigorías <b>&amp;</b> Fierros</div>
-    <div class="hdr-r">
-      <button class="iconbtn install" id="installBtn" aria-label="Instalar la app en el celular" title="Instalar" hidden><svg class="i"><use href="#i-down"/></svg></button>
-      <button class="iconbtn" id="gearBtn" aria-label="Ajustes: tu nombre y tus precios" title="Tus precios"><svg class="i"><use href="#i-gear"/></svg></button>
-    </div>
+  <header class="top">
+    <h1 id="scrTitle">Calcular</h1>
+    <button class="hbtn" id="gearBtn" aria-label="Ajustes: tu nombre y tus precios"><svg class="i"><use href="#i-gear"/></svg>Ajustes</button>
   </header>
+  <button class="installbar" id="installBtn" hidden><svg class="i"><use href="#i-down"/></svg><span>Poné la app en la pantalla del celu</span><b>Instalar</b></button>
 
-  <!-- TRABAJO -->
-  <section class="view" id="v-trabajo">
-    <div class="card">
-      <h2><svg class="i"><use href="#i-snow"/></svg>¿Qué equipo va?</h2>
-      <div class="row">
-        <span class="lbl"><svg class="i"><use href="#i-area"/></svg>Ambiente</span>
-        <div class="step">
-          <button id="m2Minus" aria-label="Menos metros"><svg class="i"><use href="#i-minus"/></svg></button>
-          <output id="m2Out">16<small>m²</small></output>
-          <button id="m2Plus" aria-label="Más metros"><svg class="i"><use href="#i-plus"/></svg></button>
+  <!-- ================= CALCULAR ================= -->
+  <section class="view" id="v-calc">
+    <div class="subnav" data-group="calc">
+      <button data-sub="equipo">Equipo</button>
+      <button data-sub="consumo">Consumo</button>
+      <button data-sub="gas">Gas</button>
+    </div>
+
+    <div class="pane" data-pane="calc:equipo">
+      <div class="block">
+        <h2>¿Qué equipo va?</h2>
+        <div class="rows">
+          <div class="row">
+            <span class="lbl"><svg class="i"><use href="#i-area"/></svg>Ambiente</span>
+            <div class="step">
+              <button id="m2Minus" aria-label="Menos metros"><svg class="i"><use href="#i-minus"/></svg></button>
+              <output id="m2Out">16<small>m²</small></output>
+              <button id="m2Plus" aria-label="Más metros"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl"><svg class="i"><use href="#i-people"/></svg>Personas</span>
+            <div class="step">
+              <button id="pMinus" aria-label="Menos personas"><svg class="i"><use href="#i-minus"/></svg></button>
+              <output id="pOut">2</output>
+              <button id="pPlus" aria-label="Más personas"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="stack" style="gap:8px">
+          <div class="seg tall" id="sunSeg" role="group" aria-label="Cuánto sol le da">
+            <button data-v="poco"><svg class="i"><use href="#i-cloud"/></svg>Sombra</button>
+            <button data-v="medio"><svg class="i"><use href="#i-sunlow"/></svg>Algo de sol</button>
+            <button data-v="mucho"><svg class="i"><use href="#i-sun"/></svg>Pleno sol</button>
+          </div>
+          <p class="hint" id="sunHint"></p>
         </div>
       </div>
-      <div class="row">
-        <span class="lbl"><svg class="i"><use href="#i-people"/></svg>Personas</span>
-        <div class="step">
-          <button id="pMinus" aria-label="Menos personas"><svg class="i"><use href="#i-minus"/></svg></button>
-          <output id="pOut">2</output>
-          <button id="pPlus" aria-label="Más personas"><svg class="i"><use href="#i-plus"/></svg></button>
-        </div>
-      </div>
-      <div class="seg" id="sunSeg" role="group" aria-label="Cuánto sol le da">
-        <button data-v="poco" title="Sombra, planta baja"><svg class="i"><use href="#i-cloud"/></svg>Sombra</button>
-        <button data-v="medio" aria-pressed="true" title="Sol parte del día"><svg class="i"><use href="#i-sunlow"/></svg>Algo de sol</button>
-        <button data-v="mucho" title="Sol de tarde, último piso, mucho vidrio"><svg class="i"><use href="#i-sun"/></svg>Pleno sol</button>
-      </div>
-      <div class="result">
-        <div class="big" id="frigOut">2.080<small>fr/h</small></div>
-        <span class="pill" id="eqOut">2.250 fr · 9.000 BTU</span>
+      <div class="answer" aria-live="polite">
+        <span class="alab" id="eqLab">Va un equipo de</span>
+        <div class="big" id="eqOut">2.250<small>fr</small></div>
+        <span class="sub" id="frigOut"></span>
       </div>
     </div>
 
-    <div class="card">
-      <h2><svg class="i"><use href="#i-receipt"/></svg>Presupuesto</h2>
-      <input class="field" id="cliente" placeholder="Cliente (opcional)" autocomplete="off">
-      <div class="note" id="exNote"><svg class="i" style="width:16px;height:16px"><use href="#i-info"/></svg><span>Precios de ejemplo. <button id="exEdit">Poné los tuyos</button></span></div>
-      <div class="items" id="items"></div>
-      <div class="total">
-        <span class="lbl">Total</span>
-        <span class="big" id="totalOut" style="font-size:34px">$0</span>
+    <div class="pane" data-pane="calc:consumo">
+      <div class="block">
+        <h2>¿Cuánto gasta de luz?</h2>
+        <div class="stack" style="gap:8px">
+          <span class="cap">Equipo, en frigorías</span>
+          <div class="seg" id="cEq" role="group" aria-label="Equipo en frigorías">
+            <button data-v="2250">2250</button><button data-v="3000">3000</button><button data-v="4500">4500</button><button data-v="5500">5500</button><button data-v="6000">6000</button>
+          </div>
+        </div>
+        <div class="rows">
+          <div class="row">
+            <span class="lbl">Tipo</span>
+            <div class="seg" id="cTec" role="group" aria-label="Tecnología"><button data-v="inv">Inverter</button><button data-v="com">Común</button></div>
+          </div>
+          <div class="row">
+            <span class="lbl"><svg class="i"><use href="#i-clock"/></svg>Horas por día</span>
+            <div class="step">
+              <button id="hMinus" aria-label="Menos horas"><svg class="i"><use href="#i-minus"/></svg></button>
+              <output id="hOut">8</output>
+              <button id="hPlus" aria-label="Más horas"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl"><svg class="i"><use href="#i-receipt"/></svg><span>$ por kWh<small>Mirala en la factura, con impuestos</small></span></span>
+            <div class="step">
+              <button id="tMinus" aria-label="Bajar tarifa"><svg class="i"><use href="#i-minus"/></svg></button>
+              <output id="tOut">150</output>
+              <button id="tPlus" aria-label="Subir tarifa"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="actions">
-        <a class="btn primary" id="waBtn" href="#" target="_blank" rel="noopener"><svg class="i"><use href="#i-msg"/></svg>Mandar por WhatsApp</a>
-        <button class="btn ghost" id="copyBtn" aria-label="Copiar texto del presupuesto"><svg class="i"><use href="#i-copy"/></svg></button>
+      <div class="answer" aria-live="polite">
+        <span class="alab">Gasta de luz, más o menos</span>
+        <div class="big" id="cCost">$0<small>por mes</small></div>
+        <span class="sub" id="cKwh">0 kWh por mes</span>
+        <p class="more" id="cCmp"></p>
+      </div>
+      <p class="tip"><svg class="i"><use href="#i-info"/></svg><span id="cPow"></span></p>
+    </div>
+
+    <div class="pane" data-pane="calc:gas">
+      <div class="block">
+        <h2>Carga extra de gas</h2>
+        <div class="rows">
+          <div class="row">
+            <span class="lbl">Gas</span>
+            <div class="seg" id="gRef" role="group" aria-label="Refrigerante"><button data-v="R410A">R410A</button><button data-v="R32">R32</button></div>
+          </div>
+          <div class="row">
+            <span class="lbl"><span>Caño de líquido<small>el finito</small></span></span>
+            <div class="seg" id="gCano" role="group" aria-label="Caño de líquido (el finito)"><button data-v="14">1/4"</button><button data-v="38">3/8"</button></div>
+          </div>
+          <div class="row">
+            <span class="lbl"><svg class="i"><use href="#i-ruler"/></svg>Caño total</span>
+            <div class="step">
+              <button id="lMinus" aria-label="Menos metros"><svg class="i"><use href="#i-minus"/></svg></button>
+              <output id="lOut">7<small>m</small></output>
+              <button id="lPlus" aria-label="Más metros"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+          <div class="row">
+            <span class="lbl"><span>Viene cargado<small>de fábrica, para</small></span></span>
+            <div class="seg" id="gPre" role="group" aria-label="Metros que vienen cargados de fábrica"><button data-v="5">5 m</button><button data-v="7.5">7,5 m</button></div>
+          </div>
+          <div class="row">
+            <span class="lbl"><span>Gramos por metro<small>extra, según etiqueta</small></span></span>
+            <div class="step">
+              <button id="gpmMinus" aria-label="Menos gramos por metro"><svg class="i"><use href="#i-minus"/></svg></button>
+              <output id="gpmOut">15</output>
+              <button id="gpmPlus" aria-label="Más gramos por metro"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="answer" aria-live="polite">
+        <span class="alab">Hay que agregar</span>
+        <div class="big" id="gOut">+30<small>g</small></div>
+        <span class="sub" id="gCalc"></span>
+      </div>
+      <p class="tip"><svg class="i"><use href="#i-info"/></svg><span>Manda la etiqueta de la unidad exterior: si dice otros metros o gramos, cambialos arriba.</span></p>
+    </div>
+  </section>
+
+  <!-- ================= TRABAJOS ================= -->
+  <section class="view" id="v-trab" hidden>
+    <div class="subnav" data-group="trab">
+      <button data-sub="pres">Presupuesto</button>
+      <button data-sub="cli">Clientes</button>
+      <button data-sub="plata">Cobros</button>
+    </div>
+
+    <div class="pane" data-pane="trab:pres">
+      <div class="block">
+        <input class="field" id="cliente" placeholder="Nombre del cliente (opcional)" autocomplete="off" aria-label="Nombre del cliente">
+        <p class="note" id="exNote"><span>Son precios de ejemplo.</span><button id="exEdit">Poner los míos</button></p>
+        <div class="items" id="items"></div>
+        <div class="total">
+          <span>Total</span>
+          <span class="big" id="totalOut">$0</span>
+        </div>
+      </div>
+      <div class="stack" style="gap:10px">
+        <div class="actions">
+          <a class="btn primary" id="waBtn" href="#" target="_blank" rel="noopener"><svg class="i"><use href="#i-msg"/></svg>Mandar por WhatsApp</a>
+          <button class="btn ghost icon" id="copyBtn" aria-label="Copiar texto del presupuesto"><svg class="i"><use href="#i-copy"/></svg>Copiar</button>
+        </div>
+        <button class="btn ghost" id="presSave"><svg class="i"><use href="#i-plus"/></svg>Guardar como trabajo</button>
+      </div>
+    </div>
+
+    <div class="pane" data-pane="trab:cli">
+      <div class="alert" id="dueCard" hidden>
+        <h2>Toca service <span class="cnt" id="dueCnt">0</span></h2>
+        <div id="dueList"></div>
+      </div>
+      <button class="btn primary" id="jobAdd"><svg class="i"><use href="#i-plus"/></svg>Nuevo trabajo</button>
+      <div class="stack" style="gap:12px">
+        <div class="search"><svg class="i"><use href="#i-search"/></svg><input class="field" id="jobSearch" placeholder="Buscar cliente o dirección" autocomplete="off" aria-label="Buscar cliente" hidden></div>
+        <div id="jobList"></div>
+      </div>
+    </div>
+
+    <div class="pane" data-pane="trab:plata">
+      <div class="month">
+        <button class="navbtn" id="mPrev" aria-label="Mes anterior"><svg class="i"><use href="#i-left"/></svg></button>
+        <span id="mName">noviembre</span>
+        <button class="navbtn" id="mNext" aria-label="Mes siguiente"><svg class="i"><use href="#i-right"/></svg></button>
+      </div>
+      <div class="answer">
+        <span class="alab">Ganancia del mes</span>
+        <div class="big" id="pGan">$0</div>
+        <div class="split">
+          <div><small>Cobrado</small><b id="pCob">$0</b></div>
+          <div><small>Materiales</small><b id="pGas">$0</b></div>
+        </div>
+      </div>
+      <div class="block" style="gap:4px">
+        <h2>Te deben <span class="cnt" id="debTot">$0</span></h2>
+        <div id="debList"></div>
       </div>
     </div>
   </section>
 
-  <!-- ENTRENO -->
+  <!-- ================= TALLER ================= -->
+  <section class="view" id="v-taller" hidden>
+    <div class="subnav" data-group="taller">
+      <button data-sub="lista">¿Llevo todo?</button>
+      <button data-sub="codigos">Códigos</button>
+    </div>
+
+    <div class="pane" data-pane="taller:lista">
+      <div class="seg" id="chkTipo" role="group" aria-label="Tipo de trabajo">
+        <button data-v="inst">Instalación</button><button data-v="serv">Service</button><button data-v="desin">Desinst.</button>
+      </div>
+      <div class="block" style="gap:8px">
+        <div class="row"><span class="prog" id="chkProg">0 de 0</span><button class="btn ghost sm" id="chkReset"><svg class="i"><use href="#i-undo"/></svg>Desmarcar todo</button></div>
+        <div class="items" id="chkList"></div>
+      </div>
+      <div class="composer">
+        <input class="field" id="chkNew" placeholder="Agregar algo a la lista" autocomplete="off" aria-label="Agregar algo a la lista">
+        <button class="addb" id="chkAdd" aria-label="Agregar"><svg class="i"><use href="#i-plus"/></svg></button>
+      </div>
+    </div>
+
+    <div class="pane" data-pane="taller:codigos">
+      <div class="block">
+        <div class="chips" id="brandChips" role="group" aria-label="Marca"></div>
+        <div class="search"><svg class="i"><use href="#i-search"/></svg><input class="field" id="codeQ" placeholder="Código del display, ej: E1" autocomplete="off" autocapitalize="characters" aria-label="Código del display"></div>
+        <div id="codeList"></div>
+        <button class="btn ghost" id="codeAsk"><svg class="i"><use href="#i-spark"/></svg><span id="codeAskTxt">Preguntarle a Claude</span></button>
+      </div>
+      <button class="btn quiet" id="ncOpen"><svg class="i"><use href="#i-plus"/></svg>Anotar un código que viste</button>
+      <div class="ncform block" id="ncForm" hidden>
+        <h2>Anotar un código</h2>
+        <div class="two">
+          <label class="f">Código<input class="field" id="ncCode" autocapitalize="characters" autocomplete="off"></label>
+          <label class="f">Marca<input class="field" id="ncBrand" autocomplete="off"></label>
+        </div>
+        <label class="f">Qué significa o qué hiciste<input class="field" id="ncText" autocomplete="off"></label>
+        <div class="two">
+          <button class="btn ghost" id="ncCancel">Cancelar</button>
+          <button class="btn primary" id="ncSave">Guardar</button>
+        </div>
+      </div>
+      <p class="tip"><svg class="i"><use href="#i-info"/></svg><span>Los códigos cambian según el modelo. Ante la duda, el manual del equipo manda.</span></p>
+    </div>
+  </section>
+
+  <!-- ================= ENTRENO ================= -->
   <section class="view" id="v-entreno" hidden>
-    <div class="card">
-      <div class="week" id="week"></div>
+    <div class="block">
+      <div class="week" id="week" role="group" aria-label="Día de la semana"></div>
       <div class="dayhead">
         <div class="ico"><svg class="i" id="dIco"><use href="#i-dumb"/></svg></div>
         <div><h3 id="dTitle">Fuerza A</h3><p id="dSub"></p></div>
       </div>
       <div class="ex" id="exList"></div>
+      <div id="cardioBox"></div>
       <button class="btn ghost timer" id="timerBtn" hidden><svg class="i"><use href="#i-timer"/></svg><span id="timerTxt">Descanso 1:30</span></button>
     </div>
-    <div class="info"><svg class="i"><use href="#i-heart"/></svg><span>Antes de arrancar fierros, un chequeo con el médico.</span></div>
+    <div class="block" style="gap:12px">
+      <h2 id="sumMonth">Este mes</h2>
+      <div class="stats3">
+        <div class="stat"><b id="sFz">0</b><small>Fierros</small></div>
+        <div class="stat"><b id="sKm">0 km</b><small>Caminado</small></div>
+        <div class="stat"><b id="sNa">0 m</b><small>Nadado</small></div>
+      </div>
+    </div>
+    <p class="tip"><svg class="i"><use href="#i-heart"/></svg><span>Antes de arrancar fierros, un chequeo con el médico.</span></p>
   </section>
 
-  <!-- CLAUDE -->
+  <!-- ================= CLAUDE ================= -->
   <section class="view" id="v-claude" hidden>
-    <div class="card">
-      <h2><svg class="i"><use href="#i-spark"/></svg>Preguntale a Claude</h2>
-      <div class="chips" id="chips">
-        <button class="chip">El split gotea agua adentro</button>
-        <button class="chip">Enfría poco y la exterior hace ruido</button>
-        <button class="chip">Un cliente se queja del precio, ¿qué le contesto?</button>
-        <button class="chip">Me duele la espalda después de una instalación</button>
-        <button class="chip">¿Qué como antes de nadar a la mañana?</button>
-      </div>
+    <div class="block">
+      <h2>¿Qué querés saber?</h2>
       <div class="composer">
-        <textarea id="ask" rows="1" placeholder="Escribí tu pregunta…"></textarea>
-        <button class="iconbtn send" id="sendBtn" aria-label="Preguntar en Claude"><svg class="i"><use href="#i-send"/></svg></button>
+        <textarea id="ask" rows="1" placeholder="Escribí tu pregunta…" aria-label="Tu pregunta"></textarea>
+        <button class="send" id="sendBtn" aria-label="Preguntar en Claude"><svg class="i"><use href="#i-send"/></svg></button>
       </div>
-      <div class="hint"><svg class="i"><use href="#i-out"/></svg>Se abre Claude con la pregunta lista</div>
+      <p class="hint"><svg class="i"><use href="#i-out"/></svg>Se abre Claude con tu pregunta ya escrita</p>
+    </div>
+    <div class="block" style="gap:4px">
+      <span class="cap">O tocá una de estas</span>
+      <div class="sugg" id="chips">
+        <button class="chip"><span>El split gotea agua adentro</span><svg class="i"><use href="#i-out"/></svg></button>
+        <button class="chip"><span>Enfría poco y la exterior hace ruido</span><svg class="i"><use href="#i-out"/></svg></button>
+        <button class="chip"><span>Un cliente se queja del precio, ¿qué le contesto?</span><svg class="i"><use href="#i-out"/></svg></button>
+        <button class="chip"><span>Me duele la espalda después de una instalación</span><svg class="i"><use href="#i-out"/></svg></button>
+        <button class="chip"><span>¿Qué como antes de nadar a la mañana?</span><svg class="i"><use href="#i-out"/></svg></button>
+      </div>
     </div>
   </section>
 </div>
 
 <nav><div class="in" role="tablist">
-  <button role="tab" data-tab="trabajo" aria-selected="true"><svg class="i"><use href="#i-snow"/></svg>Trabajo</button>
-  <button role="tab" data-tab="entreno" aria-selected="false"><svg class="i"><use href="#i-dumb"/></svg>Entreno</button>
-  <button role="tab" data-tab="claude" aria-selected="false" id="claudeTab"><svg class="i"><use href="#i-spark"/></svg>Claude</button>
+  <button role="tab" data-tab="calc"><span class="ic"><svg class="i"><use href="#i-snow"/></svg></span>Calcular</button>
+  <button role="tab" data-tab="trab"><span class="ic"><svg class="i"><use href="#i-receipt"/></svg></span>Trabajos</button>
+  <button role="tab" data-tab="taller"><span class="ic"><svg class="i"><use href="#i-wrench"/></svg></span>Taller</button>
+  <button role="tab" data-tab="entreno"><span class="ic"><svg class="i"><use href="#i-dumb"/></svg></span>Entreno</button>
+  <button role="tab" data-tab="claude"><span class="ic"><svg class="i"><use href="#i-spark"/></svg></span>Claude</button>
 </div></nav>
 
+<!-- Ajustes -->
 <div class="sheet" id="sheet" hidden>
-  <div class="panel" role="dialog" aria-label="Ajustes">
-    <h3>Tus datos</h3>
-    <input class="field" id="miNombre" placeholder="Tu nombre (firma del presupuesto)" autocomplete="off">
-    <h3 style="margin-top:6px">Tus precios</h3>
-    <div id="priceRows" style="display:flex;flex-direction:column;gap:10px"></div>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="sh-h"><h3 id="setTitle">Ajustes</h3><button class="close" id="sheetX" aria-label="Cerrar"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <label class="f"><span>Tu nombre <small>· firma de los mensajes</small></span><input class="field" id="miNombre" autocomplete="off"></label>
+    <label class="f"><span>Alias para cobrar <small>· opcional</small></span><input class="field" id="miAlias" autocomplete="off"></label>
+    <h4>Tus precios</h4>
+    <div class="chips"><span class="cap">Subir todo</span>
+      <button class="chip" data-pct="5">+5%</button><button class="chip" data-pct="10">+10%</button><button class="chip" data-pct="20">+20%</button>
+    </div>
+    <div id="priceRows" class="stack" style="gap:10px"></div>
     <button class="btn primary" id="sheetOk">Listo</button>
+    <p class="sig"><b>Frigorías &amp; Fierros</b> · todo queda guardado en este celular</p>
   </div>
 </div>
-<div class="toast" id="toast" hidden></div>
+
+<!-- Trabajo -->
+<div class="sheet" id="jobSheet" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="jobTitle">
+    <div class="sh-h"><h3 id="jobTitle">Nuevo trabajo</h3><button class="close" id="jobX" aria-label="Cerrar sin guardar"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <label class="f">Cliente<input class="field" id="jCli" autocomplete="off"></label>
+    <label class="f">Celular<input class="field" id="jTel" type="tel" inputmode="tel" placeholder="11 1234 5678" autocomplete="off"></label>
+    <label class="f"><span>Dirección <small>· opcional</small></span><input class="field" id="jDir" autocomplete="off"></label>
+    <div class="f"><span>Qué se hizo</span><div class="seg g2" id="jTipo" role="group" aria-label="Qué se hizo"><button data-v="inst">Instalación</button><button data-v="serv">Service</button><button data-v="desin">Desinstalación</button><button data-v="otro">Otro</button></div></div>
+    <div class="f"><span>Equipo, en frigorías</span><div class="seg" id="jEq" role="group" aria-label="Equipo"><button data-v="" aria-label="Sin dato">—</button><button data-v="2250">2250</button><button data-v="3000">3000</button><button data-v="4500">4500</button><button data-v="5500">5500</button><button data-v="6000">6000</button></div></div>
+    <div class="two">
+      <label class="f">Cobro $<input class="field" id="jMonto" inputmode="numeric" autocomplete="off"></label>
+      <label class="f">Materiales $<input class="field" id="jGasto" inputmode="numeric" autocomplete="off"></label>
+    </div>
+    <div class="two">
+      <label class="f">Fecha<input class="field" id="jFecha" type="date"></label>
+      <div class="f"><span>Estado</span><div class="seg" id="jCob" role="group" aria-label="Estado del cobro"><button data-v="0">Debe</button><button data-v="1">Cobrado</button></div></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="jSave">Guardar</button>
+      <button class="btn ghost danger" id="jDel" aria-label="Borrar trabajo"><svg class="i"><use href="#i-trash"/></svg></button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
 
 <script>
 (() => {
@@ -302,42 +677,156 @@ const store = {
   get(k, d){ try{ const v = localStorage.getItem("fyf:"+k); return v == null ? d : JSON.parse(v); }catch{ return d; } },
   set(k, v){ try{ localStorage.setItem("fyf:"+k, JSON.stringify(v)); }catch{} }
 };
-const ars = n => "$" + Math.round(n).toLocaleString("es-AR");
-const num = n => Math.round(n).toLocaleString("es-AR");
-function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>el.hidden=true,1800); }
-
-/* ---------- pestañas ---------- */
-const tabs = document.querySelectorAll("nav button");
-function show(name){
-  tabs.forEach(b => b.setAttribute("aria-selected", b.dataset.tab===name));
-  ["trabajo","entreno","claude"].forEach(v => $("v-"+v).hidden = v!==name);
-  store.set("tab", name); window.scrollTo(0,0);
+const ars = n => (Math.round(n) < 0 ? "−$" : "$") + Math.abs(Math.round(n)).toLocaleString("es-AR");
+const num = (n, d=0) => Number(n).toLocaleString("es-AR", {maximumFractionDigits:d});
+const toInt = v => parseInt(String(v ?? "").replace(/\D/g,""), 10) || 0;
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const iso = d => new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+const today = iso(new Date());
+const fdate = s => { const [y,m,d] = s.split("-"); return `${d}/${m}/${y.slice(2)}`; };
+const monthsSince = s => (Date.now() - new Date(s+"T12:00").getTime()) / (30.44*864e5);
+const daysSince = s => Math.floor((Date.now() - new Date(s+"T12:00").getTime()) / 864e5);
+const ico = (id, cls="") => `<svg class="i ${cls}"><use href="#${id}"/></svg>`;
+// aviso abajo; si se pasa "undo", muestra "Deshacer" unos segundos
+function toast(t, undo){
+  const el = $("toast"); el.innerHTML = "";
+  const s = document.createElement("span"); s.textContent = t; el.appendChild(s);
+  if (undo){
+    const b = document.createElement("button"); b.textContent = "Deshacer";
+    b.onclick = () => { clearTimeout(toast.t); el.hidden = true; undo(); toast("Listo, quedó como antes"); };
+    el.appendChild(b);
+  }
+  el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, undo ? 6000 : 2200);
 }
-tabs.forEach(b => b.onclick = () => show(b.dataset.tab));
+function openUrl(u){ const a=document.createElement("a"); a.href=u; a.target="_blank"; a.rel="noopener"; document.body.appendChild(a); a.click(); a.remove(); }
+function seg(id, val, onPick){
+  const el = $(id);
+  const paint = v => el.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === String(v)));
+  paint(val);
+  if (onPick) el.querySelectorAll("button").forEach(b => b.onclick = () => { paint(b.dataset.v); onPick(b.dataset.v); });
+  return paint;
+}
+const segVal = id => $(id).querySelector('[aria-pressed="true"]')?.dataset.v;
+// − / +: un toque suma uno; si lo deja apretado, sigue sumando solo
+function stepper(minus, plus, get, set, step, min, max){
+  const bind = (id, dir) => {
+    const b = $(id); let t = null, held = false;
+    const tick = () => set(clamp(+(get() + dir*step).toFixed(2), min, max));
+    const stop = () => { clearTimeout(t); clearInterval(t); t = null; };
+    b.onpointerdown = () => { held = false; stop(); t = setTimeout(() => { held = true; tick(); t = setInterval(tick, 120); }, 500); };
+    b.onpointerup = b.onpointerleave = b.onpointercancel = stop;
+    b.oncontextmenu = e => e.preventDefault();
+    b.onclick = () => { if (held){ held = false; return; } tick(); };
+  };
+  bind(minus, -1); bind(plus, 1);
+}
+// número argentino → formato wa.me (549 + área + número)
+function waNum(t){
+  let d = String(t||"").replace(/\D/g,"");
+  if (!d) return "";
+  if (d.startsWith("54")) d = d.slice(2);
+  if (d.startsWith("9")) d = d.slice(1);
+  if (d.startsWith("0")) d = d.slice(1);
+  if (d.length === 10 && d.startsWith("15")) d = "11" + d.slice(2);
+  if (d.length === 12) for (const p of [2,3,4]) if (d.substr(p,2) === "15"){ d = d.slice(0,p) + d.slice(p+2); break; }
+  return d.length === 10 ? "549" + d : "";
+}
+const waUrl = (tel, text) => "https://wa.me/" + waNum(tel) + "?text=" + encodeURIComponent(text);
+const firstName = s => String(s||"").trim().split(/\s+/)[0] || "";
 
-/* ---------- frigorías ---------- */
+/* ---------- pestañas y sub-secciones ---------- */
+const TABS = ["calc","trab","taller","entreno","claude"];
+const TITLES = {calc:"Calcular", trab:"Trabajos", taller:"Taller", entreno:"Entreno", claude:"Claude"};
+const tabBtns = document.querySelectorAll("nav button");
+const subs = store.get("subs", {calc:"equipo", trab:"pres", taller:"lista"});
+function show(name){
+  if (!TABS.includes(name)) name = "calc";
+  tabBtns.forEach(b => b.setAttribute("aria-selected", b.dataset.tab===name));
+  TABS.forEach(v => $("v-"+v).hidden = v!==name);
+  $("scrTitle").textContent = TITLES[name];
+  store.set("tab", name); window.scrollTo(0,0);
+  if (name === "trab") renderTrab();
+  if (name === "entreno") renderWeek();
+}
+tabBtns.forEach(b => b.onclick = () => show(b.dataset.tab));
+function showSub(group, sub){
+  subs[group] = sub; store.set("subs", subs);
+  document.querySelectorAll(`.subnav[data-group="${group}"] button`).forEach(b => b.setAttribute("aria-pressed", b.dataset.sub===sub));
+  document.querySelectorAll(`[data-pane^="${group}:"]`).forEach(p => p.hidden = p.dataset.pane !== group+":"+sub);
+  if (group === "trab") renderTrab();
+}
+document.querySelectorAll(".subnav").forEach(n => {
+  n.querySelectorAll("button").forEach(b => b.onclick = () => showSub(n.dataset.group, b.dataset.sub));
+});
+
+/* ---------- Calcular: equipo ---------- */
 const EQUIPOS = [[2250,9000],[3000,12000],[4500,18000],[5500,22000],[6000,24000]];
 const FACTOR = {poco:42, medio:50, mucho:60}; // frigorías por m³ (techo 2,60 m)
+const SOL = {poco:"Sombra o planta baja", medio:"Le da sol parte del día", mucho:"Sol de tarde, último piso o mucho vidrio"};
 const calc = store.get("calc", {m2:16, p:2, sol:"medio"});
+const paintSun = seg("sunSeg", calc.sol, v => { calc.sol = v; renderCalc(); });
 function renderCalc(){
   $("m2Out").innerHTML = calc.m2 + "<small>m²</small>";
   $("pOut").textContent = calc.p;
-  document.querySelectorAll("#sunSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v===calc.sol));
+  $("sunHint").textContent = SOL[calc.sol] || "";
   const need = calc.m2 * 2.6 * FACTOR[calc.sol] + Math.max(0, calc.p-2) * 150;
-  $("frigOut").innerHTML = num(need) + "<small>fr/h</small>";
   const eq = EQUIPOS.find(([f]) => f >= need*0.93);
-  $("eqOut").textContent = eq ? `${num(eq[0])} fr · ${num(eq[1])} BTU` : "2 equipos o central";
+  $("eqLab").textContent = eq ? "Va un equipo de" : "Con uno solo no alcanza";
+  $("eqOut").innerHTML = eq ? num(eq[0]) + "<small>frigorías</small>" : "2 equipos";
+  $("frigOut").textContent = (eq ? `${num(eq[1])} BTU · ` : "o un central · ") + `el ambiente pide ${num(need)} fr/h (techo de 2,60 m)`;
   store.set("calc", calc);
 }
-const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
-$("m2Minus").onclick = () => { calc.m2 = clamp(calc.m2-1, 6, 80); renderCalc(); };
-$("m2Plus").onclick  = () => { calc.m2 = clamp(calc.m2+1, 6, 80); renderCalc(); };
-$("pMinus").onclick  = () => { calc.p = clamp(calc.p-1, 1, 12); renderCalc(); };
-$("pPlus").onclick   = () => { calc.p = clamp(calc.p+1, 1, 12); renderCalc(); };
-document.querySelectorAll("#sunSeg button").forEach(b => b.onclick = () => { calc.sol = b.dataset.v; renderCalc(); });
+stepper("m2Minus","m2Plus", () => calc.m2, v => { calc.m2 = v; renderCalc(); }, 1, 6, 80);
+stepper("pMinus","pPlus", () => calc.p, v => { calc.p = v; renderCalc(); }, 1, 1, 12);
 renderCalc();
 
-/* ---------- presupuesto ---------- */
+/* ---------- Calcular: consumo ---------- */
+// potencia eléctrica nominal ≈ frigorías × 1,163 / EER 3,2 (clase A). Uso promedio: común 75 %, inverter 45 % de esa potencia.
+const cons = store.get("cons", {fr:"3000", tec:"inv", h:8, tar:150});
+seg("cEq", cons.fr, v => { cons.fr = v; renderCons(); });
+seg("cTec", cons.tec, v => { cons.tec = v; renderCons(); });
+stepper("hMinus","hPlus", () => cons.h, v => { cons.h = v; renderCons(); }, 1, 1, 24);
+stepper("tMinus","tPlus", () => cons.tar, v => { cons.tar = v; renderCons(); }, 10, 10, 2000);
+function renderCons(){
+  const pNom = (+cons.fr) * 1.163 / 3.2;              // W
+  const kwh = f => pNom * f * cons.h * 30 / 1000;
+  const kInv = kwh(.45), kCom = kwh(.75);
+  const k = cons.tec === "inv" ? kInv : kCom;
+  $("hOut").textContent = cons.h;
+  $("tOut").textContent = num(cons.tar);
+  $("cCost").innerHTML = ars(k * cons.tar) + "<small>por mes</small>";
+  $("cKwh").textContent = num(k) + " kWh por mes";
+  const ahorro = (kCom - kInv) * cons.tar;
+  $("cCmp").textContent = cons.tec === "inv"
+    ? `Uno común gastaría ${ars(kCom*cons.tar)}: con inverter ahorra ${ars(ahorro)} por mes.`
+    : `Con un inverter ahorraría unos ${ars(ahorro)} por mes.`;
+  $("cPow").textContent = `Tira hasta ${num(pNom/1000,1)} kW · ${num(pNom/220,1)} A. Es un estimado de uso en verano.`;
+  store.set("cons", cons);
+}
+renderCons();
+
+/* ---------- Calcular: gas ---------- */
+const GPM = {R410A:{"14":15,"38":30}, R32:{"14":12,"38":24}}; // g por metro extra (valor típico de manual; ajustable)
+const gas = store.get("gas", {ref:"R410A", cano:"14", largo:7, pre:"5", gpm:15});
+const resetGpm = () => { gas.gpm = GPM[gas.ref][gas.cano]; };
+seg("gRef", gas.ref, v => { gas.ref = v; resetGpm(); renderGas(); });
+seg("gCano", gas.cano, v => { gas.cano = v; resetGpm(); renderGas(); });
+seg("gPre", gas.pre, v => { gas.pre = v; renderGas(); });
+stepper("lMinus","lPlus", () => gas.largo, v => { gas.largo = v; renderGas(); }, 1, 1, 50);
+stepper("gpmMinus","gpmPlus", () => gas.gpm, v => { gas.gpm = v; renderGas(); }, 1, 5, 80);
+function renderGas(){
+  $("lOut").innerHTML = gas.largo + "<small>m</small>";
+  $("gpmOut").textContent = gas.gpm;
+  const extra = Math.max(0, gas.largo - (+gas.pre));
+  const g = Math.round(extra * gas.gpm);
+  if (g <= 0){ $("gOut").innerHTML = "0<small>g</small>"; $("gCalc").textContent = "No hace falta agregar: el caño entra en lo que viene cargado."; }
+  else { $("gOut").innerHTML = "+" + num(g) + "<small>gramos</small>"; $("gCalc").textContent = `${num(extra,1)} m de más × ${gas.gpm} g por metro`; }
+  store.set("gas", gas);
+}
+renderGas();
+
+/* ---------- Presupuesto ---------- */
 const DEFAULT_ITEMS = [
   {id:"inst1", name:"Instalación split hasta 3.000 fr", price:180000},
   {id:"inst2", name:"Instalación split 4.500–6.000 fr", price:240000},
@@ -352,139 +841,457 @@ const items = DEFAULT_ITEMS.map(it => ({...it, price: prices?.[it.id] ?? it.pric
 const sel = store.get("sel", {inst1:1, metro:2, mens:1});
 $("cliente").value = store.get("cliente", "");
 $("exNote").hidden = !!prices;
-
+const presTotal = () => items.reduce((s,it) => s + (sel[it.id] ? it.price*(it.qty?sel[it.id]:1) : 0), 0);
+const anySel = () => items.some(it => sel[it.id]);
 function budgetText(){
-  const cli = $("cliente").value.trim();
+  const cli = firstName($("cliente").value);
   const nom = store.get("nombre", "").trim();
   const lines = items.filter(it => sel[it.id]).map(it => {
     const q = it.qty ? sel[it.id] : 1;
     return `• ${it.name}${it.qty ? ` (${q} m)` : ""}: ${ars(it.price*q)}`;
   });
-  const tot = items.reduce((s,it) => s + (sel[it.id] ? it.price*(it.qty?sel[it.id]:1) : 0), 0);
-  return `Hola${cli ? " "+cli : ""}! Te paso el presupuesto:\n\n${lines.join("\n")}\n\nTotal: ${ars(tot)}\nValidez: 7 días.${nom ? "\n\n"+nom : ""}`;
+  return `Hola${cli ? " "+cli : ""}! Te paso el presupuesto:\n\n${lines.join("\n")}\n\nTotal: ${ars(presTotal())}\nValidez: 7 días.${nom ? "\n\n"+nom : ""}`;
 }
 function renderItems(){
   const box = $("items"); box.innerHTML = "";
-  let tot = 0;
   items.forEach(it => {
     const on = !!sel[it.id];
     const q = it.qty ? (sel[it.id]||0) : 1;
-    if (on) tot += it.price * q;
     const row = document.createElement("div");
     row.className = "item" + (on ? " on" : "");
-    row.innerHTML = `<button class="tick" aria-pressed="${on}" aria-label="${it.name}"><svg class="i"><use href="#i-check"/></svg></button>
-      <button class="name">${it.name}</button>
-      ${it.qty && on ? `<div class="qty"><button data-d="-1" aria-label="Menos metros"><svg class="i"><use href="#i-minus"/></svg></button><span>${q}</span><button data-d="1" aria-label="Más metros"><svg class="i"><use href="#i-plus"/></svg></button></div>` : ""}
-      <span class="price">${ars(it.price*(it.qty&&on?q:1))}</span>`;
-    const toggle = () => { if (sel[it.id]) delete sel[it.id]; else sel[it.id] = 1; save(); };
+    row.innerHTML = `<button class="tick" aria-pressed="${on}" aria-label="${esc(it.name)}">${ico("i-check")}</button>
+      <button class="name">${esc(it.name)}</button>
+      <span class="price">${ars(it.price*(it.qty&&on?q:1))}</span>
+      ${it.qty && on ? `<div class="qty"><button data-d="-1" aria-label="Menos metros">${ico("i-minus")}</button><span>${q} m</span><button data-d="1" aria-label="Más metros">${ico("i-plus")}</button></div>` : ""}`;
+    const toggle = () => { if (sel[it.id]) delete sel[it.id]; else sel[it.id] = 1; saveSel(); };
     row.querySelector(".tick").onclick = toggle;
     row.querySelector(".name").onclick = toggle;
-    row.querySelectorAll(".qty button").forEach(b => b.onclick = () => {
-      sel[it.id] = clamp(sel[it.id] + +b.dataset.d, 1, 40); save();
-    });
+    row.querySelectorAll(".qty button").forEach(b => b.onclick = () => { sel[it.id] = clamp(sel[it.id] + +b.dataset.d, 1, 40); saveSel(); });
     box.appendChild(row);
   });
-  $("totalOut").textContent = ars(tot);
+  $("totalOut").textContent = ars(presTotal());
   $("waBtn").href = "https://wa.me/?text=" + encodeURIComponent(budgetText());
 }
-function save(){ store.set("sel", sel); renderItems(); }
+function saveSel(){ store.set("sel", sel); renderItems(); }
 $("cliente").oninput = () => { store.set("cliente", $("cliente").value); renderItems(); };
-$("copyBtn").onclick = () => {
-  const t = budgetText();
-  navigator.clipboard?.writeText(t).then(() => toast("Copiado"), () => fallbackCopy(t)) ?? fallbackCopy(t);
-};
-function fallbackCopy(t){
-  const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select();
-  try{ document.execCommand("copy"); toast("Copiado"); }catch{ toast("Mantené apretado para copiar"); }
-  ta.remove();
+$("waBtn").addEventListener("click", e => { if (!anySel()){ e.preventDefault(); toast("Marcá primero qué vas a cobrar"); } });
+function copyText(t){
+  const fb = () => { const ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast("Copiado: pegalo donde quieras"); }catch{ toast("No se pudo copiar"); } ta.remove(); };
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(() => toast("Copiado: pegalo donde quieras"), fb); else fb();
 }
+$("copyBtn").onclick = () => { if (!anySel()) return toast("Marcá primero qué vas a cobrar"); copyText(budgetText()); };
+$("presSave").onclick = () => {
+  const tipo = sel.inst1 || sel.inst2 ? "inst" : sel.serv ? "serv" : sel.desin ? "desin" : "otro";
+  openJob({ cliente: $("cliente").value.trim(), tipo, eq: sel.inst2 ? "4500" : sel.inst1 ? "3000" : "", monto: presTotal(), cobrado: false });
+};
 renderItems();
 
-/* ---------- ajustes ---------- */
-function openSheet(){
+/* ---------- Ajustes ---------- */
+function openSettings(){
   $("miNombre").value = store.get("nombre", "");
+  $("miAlias").value = store.get("alias", "");
   const box = $("priceRows"); box.innerHTML = "";
   items.forEach(it => {
     const r = document.createElement("label"); r.className = "prow";
-    r.innerHTML = `<span>${it.name}</span><input class="field" inputmode="numeric" id="pr-${it.id}" value="${it.price}">`;
+    r.innerHTML = `<span>${esc(it.name)}</span><input class="field" inputmode="numeric" id="pr-${it.id}" value="${it.price}">`;
     box.appendChild(r);
   });
   $("sheet").hidden = false;
 }
-function closeSheet(){
-  store.set("nombre", $("miNombre").value);
+document.querySelectorAll("[data-pct]").forEach(c => c.onclick = () => {
+  const f = 1 + (+c.dataset.pct)/100;
+  items.forEach(it => { const inp = $("pr-"+it.id); inp.value = Math.round(toInt(inp.value) * f / 500) * 500; });
+  toast(`Subidos un ${c.dataset.pct}%. Tocá Listo para guardar`);
+});
+function closeSettings(){
+  store.set("nombre", $("miNombre").value.trim());
+  store.set("alias", $("miAlias").value.trim());
   const p = {};
-  items.forEach(it => { const v = parseInt($("pr-"+it.id).value.replace(/\D/g,""),10); if (!isNaN(v)) it.price = v; p[it.id] = it.price; });
+  items.forEach(it => { const v = toInt($("pr-"+it.id).value); if (v) it.price = v; p[it.id] = it.price; });
   store.set("prices", p); prices = p; $("exNote").hidden = true;
-  $("sheet").hidden = true; renderItems();
+  $("sheet").hidden = true; renderItems(); toast("Guardado");
 }
-$("gearBtn").onclick = openSheet; $("exEdit").onclick = openSheet; $("sheetOk").onclick = closeSheet;
-$("sheet").onclick = e => { if (e.target === $("sheet")) closeSheet(); };
+$("gearBtn").onclick = openSettings; $("exEdit").onclick = openSettings;
+$("sheetOk").onclick = closeSettings; $("sheetX").onclick = closeSettings;
+$("sheet").onclick = e => { if (e.target === $("sheet")) closeSettings(); };
 
-/* ---------- entreno ---------- */
+/* ---------- Trabajos ---------- */
+const TIPO = {inst:"Instalación", serv:"Service", desin:"Desinstalación", otro:"Otro"};
+let jobs = store.get("jobs", []);
+const saveJobs = () => store.set("jobs", jobs);
+let editing = null, delArmed = false;
+const paintTipo = seg("jTipo", "inst", () => {});
+const paintEq = seg("jEq", "", () => {});
+const paintCob = seg("jCob", "0", () => {});
+function resetDel(){ delArmed = false; $("jDel").classList.remove("armed"); $("jDel").innerHTML = ico("i-trash"); }
+function openJob(j){
+  editing = j.id ? j : null;
+  $("jobTitle").textContent = editing ? "Editar trabajo" : "Nuevo trabajo";
+  $("jCli").value = j.cliente || ""; $("jTel").value = j.tel || ""; $("jDir").value = j.dir || "";
+  paintTipo(j.tipo || "inst"); paintEq(j.eq || ""); paintCob(j.cobrado ? "1" : "0");
+  $("jMonto").value = j.monto ? j.monto : ""; $("jGasto").value = j.gasto ? j.gasto : "";
+  $("jFecha").value = j.fecha || today;
+  $("jDel").hidden = !editing; resetDel();
+  $("jobSheet").hidden = false;
+}
+$("jSave").onclick = () => {
+  const cli = $("jCli").value.trim();
+  if (!cli){ $("jCli").focus(); toast("Poné el nombre del cliente"); return; }
+  const data = { cliente: cli, tel: $("jTel").value.trim(), dir: $("jDir").value.trim(), tipo: segVal("jTipo"), eq: segVal("jEq"),
+    monto: toInt($("jMonto").value), gasto: toInt($("jGasto").value), fecha: $("jFecha").value || today, cobrado: segVal("jCob") === "1" };
+  if (editing) Object.assign(editing, data);
+  else jobs.push({ id: Date.now().toString(36), avisado: null, ...data });
+  saveJobs(); $("jobSheet").hidden = true; toast("Trabajo guardado");
+  if (!editing) showSub("trab", "cli"); else renderTrab();
+};
+$("jDel").onclick = () => {
+  if (!delArmed){ delArmed = true; $("jDel").classList.add("armed"); $("jDel").textContent = "¿Borrar?"; return; }
+  const j = editing, idx = jobs.indexOf(j);
+  jobs = jobs.filter(x => x !== j); saveJobs(); $("jobSheet").hidden = true; renderTrab();
+  toast("Trabajo borrado", () => { jobs.splice(Math.max(0, Math.min(idx, jobs.length)), 0, j); saveJobs(); renderTrab(); });
+};
+// la hoja del trabajo no se cierra tocando afuera: así no se pierde lo que se escribió
+$("jobX").onclick = () => { $("jobSheet").hidden = true; };
+$("jobAdd").onclick = () => openJob({});
+$("jobSearch").oninput = () => renderJobs();
+
+function dueJobs(){
+  // por cliente, el último trabajo de instalación o service; si pasaron 11 meses y no se avisó, toca
+  const last = {};
+  jobs.filter(j => j.tipo === "inst" || j.tipo === "serv").forEach(j => {
+    const k = j.cliente.toLowerCase();
+    if (!last[k] || j.fecha > last[k].fecha) last[k] = j;
+  });
+  return Object.values(last).filter(j => monthsSince(j.fecha) >= 11 && !(j.avisado && monthsSince(j.avisado) < 11))
+    .sort((a,b) => a.fecha.localeCompare(b.fecha));
+}
+function serviceMsg(j){
+  const nom = store.get("nombre","").trim();
+  return `Hola ${firstName(j.cliente)}! ${nom ? "Soy "+nom+". " : ""}Hace un año ${j.tipo==="inst" ? "te instalamos el aire" : "le hicimos el service a tu aire"}. Antes del calor conviene hacerle un service (limpieza y control de gas) para que enfríe bien y gaste menos luz. ¿Te viene bien que pase?`;
+}
+function debtMsg(j){
+  const alias = store.get("alias","").trim();
+  return `Hola ${firstName(j.cliente)}! ¿Cómo andás? Te escribo por el trabajo del ${fdate(j.fecha)} (${TIPO[j.tipo].toLowerCase()}). Quedaron pendientes ${ars(j.monto)}.${alias ? " Mi alias es "+alias+"." : ""} ¡Gracias!`;
+}
+function renderJobs(){
+  const q = $("jobSearch").value.trim().toLowerCase();
+  $("jobSearch").hidden = jobs.length < 6;
+  const list = jobs.filter(j => !q || j.cliente.toLowerCase().includes(q) || (j.dir||"").toLowerCase().includes(q))
+    .sort((a,b) => b.fecha.localeCompare(a.fecha));
+  const box = $("jobList");
+  if (!jobs.length){ box.innerHTML = `<div class="empty"><b>Todavía no anotaste trabajos</b>Tocá «Nuevo trabajo» cada vez que hacés uno. Al año, la app te avisa para ofrecerle el service.</div>`; return; }
+  box.innerHTML = "";
+  list.forEach(j => {
+    const b = document.createElement("button"); b.className = "job";
+    b.innerHTML = `<span class="jn">${esc(j.cliente)}</span><span class="m">${j.monto ? ars(j.monto) : ""}</span>
+      <span class="s">${fdate(j.fecha)} · ${TIPO[j.tipo]}${j.eq ? " · "+num(+j.eq)+" fr" : ""}</span>
+      <span class="st ${j.cobrado ? "ok" : "debe"}">${j.cobrado ? ico("i-check")+"Cobrado" : "Debe"}</span>${ico("i-right","chev")}`;
+    b.onclick = () => openJob(j);
+    box.appendChild(b);
+  });
+  if (!list.length) box.innerHTML = `<div class="empty">No encontré a nadie con ese nombre.</div>`;
+}
+function renderDue(){
+  const due = dueJobs();
+  $("dueCard").hidden = !due.length; $("dueCnt").textContent = due.length;
+  const box = $("dueList"); box.innerHTML = "";
+  due.forEach(j => {
+    const m = Math.round(monthsSince(j.fecha));
+    const r = document.createElement("div"); r.className = "due";
+    r.innerHTML = `<div><b>${esc(j.cliente)}</b><span class="s">${TIPO[j.tipo]} hace ${m} meses</span></div>
+      <div class="acts"><button class="act wa">${ico("i-msg")}Avisarle</button><button class="act okb">${ico("i-check")}Ya le avisé</button></div>`;
+    const mark = () => { const prev = j.avisado; j.avisado = today; saveJobs(); renderTrab();
+      toast(`${firstName(j.cliente)}: avisado`, () => { j.avisado = prev; saveJobs(); renderTrab(); }); };
+    r.querySelector(".wa").onclick = () => { openUrl(waUrl(j.tel, serviceMsg(j))); mark(); };
+    r.querySelector(".okb").onclick = mark;
+    box.appendChild(r);
+  });
+}
+let mOff = 0;
+function renderPlata(){
+  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + mOff);
+  const key = iso(d).slice(0,7);
+  $("mName").textContent = d.toLocaleDateString("es-AR", {month:"long", year: mOff ? "numeric" : undefined});
+  $("mNext").disabled = mOff >= 0;
+  const mes = jobs.filter(j => j.fecha.startsWith(key));
+  const cob = mes.filter(j => j.cobrado).reduce((s,j) => s + j.monto, 0);
+  const gas = mes.reduce((s,j) => s + (j.gasto||0), 0);
+  $("pCob").textContent = ars(cob); $("pGas").textContent = ars(gas); $("pGan").textContent = ars(cob - gas);
+  const deb = jobs.filter(j => !j.cobrado && j.monto).sort((a,b) => a.fecha.localeCompare(b.fecha));
+  $("debTot").textContent = deb.length ? ars(deb.reduce((s,j) => s + j.monto, 0)) : "";
+  const box = $("debList"); box.innerHTML = "";
+  if (!deb.length){ box.innerHTML = `<div class="empty">Nadie te debe nada.</div>`; return; }
+  deb.forEach(j => {
+    const r = document.createElement("div"); r.className = "due";
+    const dd = daysSince(j.fecha);
+    r.innerHTML = `<div><b>${esc(j.cliente)} · ${ars(j.monto)}</b><span class="s">${dd === 0 ? "Hoy" : dd === 1 ? "Ayer" : "Hace "+dd+" días"} · ${TIPO[j.tipo]}</span></div>
+      <div class="acts"><button class="act wa">${ico("i-msg")}Recordarle</button><button class="act okb">${ico("i-check")}Ya cobré</button></div>`;
+    r.querySelector(".wa").onclick = () => openUrl(waUrl(j.tel, debtMsg(j)));
+    r.querySelector(".okb").onclick = () => { j.cobrado = true; saveJobs(); renderTrab();
+      toast(`¡Cobrado! ${ars(j.monto)}`, () => { j.cobrado = false; saveJobs(); renderTrab(); }); };
+    box.appendChild(r);
+  });
+}
+$("mPrev").onclick = () => { mOff--; renderPlata(); };
+$("mNext").onclick = () => { if (mOff < 0){ mOff++; renderPlata(); } };
+function renderTrab(){ renderDue(); renderJobs(); renderPlata(); }
+
+/* ---------- Taller: lista ---------- */
+const CHK = {
+  inst: ["Taladro percutor y mechas","Mecha copa para el pase de pared","Caño de cobre","Aislante para caño","Cinta","Cable de interconexión","Manguera de desagote","Ménsulas, tarugos y bulones","Nivel","Cortacaños y abocardador","Llaves y torquimétrica","Bomba de vacío","Manifold y mangueras","Garrafa de gas","Balanza","Pinza amperométrica / tester","Masilla o silicona","Escalera","Arnés y soga (si es en altura)"],
+  serv: ["Hidrolavadora o mochila","Limpiador de serpentina","Bolsa colectora de lavado","Trapos","Peine de aletas","Destornilladores","Manifold y mangueras","Garrafa de gas","Balanza","Pinza amperométrica / tester","Escalera"],
+  desin: ["Manifold (para recoger el gas)","Llaves","Tapones para caños","Cinta","Destornilladores","Escalera","Arnés y soga (si es en altura)","Cajas o bolsas para el equipo"],
+};
+let chkTipo = store.get("chkTipo", "inst");
+const chkDone = store.get("chkDone", {inst:[], serv:[], desin:[]});
+const chkCustom = store.get("chkCustom", {inst:[], serv:[], desin:[]});
+seg("chkTipo", chkTipo, v => { chkTipo = v; store.set("chkTipo", v); renderChk(); });
+function renderChk(){
+  const all = [...CHK[chkTipo].map(t => ({t})), ...chkCustom[chkTipo].map(t => ({t, custom:true}))];
+  const done = chkDone[chkTipo];
+  const n = all.filter(x => done.includes(x.t)).length, full = all.length > 0 && n === all.length;
+  $("chkProg").innerHTML = full ? `Llevás todo` : `${n} de ${all.length} listos`;
+  $("chkProg").classList.toggle("ok", full);
+  $("chkReset").disabled = !n;
+  const box = $("chkList"); box.innerHTML = "";
+  all.forEach(x => {
+    const on = done.includes(x.t);
+    const r = document.createElement("div"); r.className = "item" + (on ? " on" : "");
+    r.innerHTML = `<button class="tick" aria-pressed="${on}" aria-label="${esc(x.t)}">${ico("i-check")}</button><button class="name">${esc(x.t)}</button>${x.custom ? `<button class="x" aria-label="Sacar de la lista">${ico("i-x")}</button>` : ""}`;
+    const tog = () => { const k = done.indexOf(x.t); k >= 0 ? done.splice(k,1) : done.push(x.t); store.set("chkDone", chkDone); renderChk(); };
+    r.querySelector(".tick").onclick = tog; r.querySelector(".name").onclick = tog;
+    if (x.custom) r.querySelector(".x").onclick = () => {
+      const tipo = chkTipo, arr = chkCustom[tipo], idx = arr.indexOf(x.t);
+      chkCustom[tipo] = arr.filter(t => t !== x.t); store.set("chkCustom", chkCustom); renderChk();
+      toast(`Saqué «${x.t}»`, () => { chkCustom[tipo].splice(Math.min(idx, chkCustom[tipo].length), 0, x.t); store.set("chkCustom", chkCustom); renderChk(); });
+    };
+    box.appendChild(r);
+  });
+}
+$("chkReset").onclick = () => {
+  const tipo = chkTipo, prev = [...chkDone[tipo]];
+  chkDone[tipo] = []; store.set("chkDone", chkDone); renderChk();
+  toast("Lista desmarcada", () => { chkDone[tipo] = prev; store.set("chkDone", chkDone); renderChk(); });
+};
+const addChk = () => { const t = $("chkNew").value.trim(); if (!t) { $("chkNew").focus(); return; } chkCustom[chkTipo].push(t); store.set("chkCustom", chkCustom); $("chkNew").value = ""; renderChk(); toast("Agregado a la lista"); };
+$("chkAdd").onclick = addChk;
+$("chkNew").addEventListener("keydown", e => { if (e.key === "Enter") addChk(); });
+renderChk();
+
+/* ---------- Taller: códigos ---------- */
+// LG y Samsung: según sus páginas oficiales de soporte. Midea/Surrey: códigos comunes de la familia, varían según modelo.
+const CODES = {
+  "LG": [
+    ["CH05","Falla de comunicación entre interior y exterior","Cable de interconexión, bornes y conectores. Cortá la luz 5 min y probá.",1],
+    ["CH53","Falla de comunicación entre interior y exterior","Igual que CH05: cableado, bornes, conectores y placa.",1],
+    ["E0","Falla de comunicación entre interior y exterior","Cableado y conectores entre las dos unidades.",1],
+    ["CH38","Poco gas","Buscá la fuga con espuma en uniones y abocardados, reparala, hacé vacío y cargá por peso.",1],
+  ],
+  "Samsung": [
+    ["E101","Error de comunicación entre interior y exterior","Cable de interconexión, bornes y alimentación de la exterior.",1],
+    ["E102","Error de comunicación entre interior y exterior","Cable de interconexión, bornes y alimentación de la exterior.",1],
+    ["E121","Falla del sensor de temperatura ambiente (interior)","Conector del sensor en la placa; medí la resistencia.",1],
+    ["E458","Falla del ventilador de la exterior","Que gire libre, conector y motor.",1],
+    ["E464","Sobrecorriente en el módulo inverter (IPM)","Medí la tensión de línea. Si sigue: placa inverter o compresor.",1],
+    ["E554","Fuga de gas detectada","Buscá la fuga, reparala, vacío y carga por peso.",1],
+  ],
+  "Midea / Surrey": [
+    ["E1","Comunicación entre interior y exterior","Cable de interconexión, bornes y conectores.",0],
+    ["E3","Ventilador interior fuera de velocidad","Motor, conector, turbina trabada o sucia.",0],
+    ["E4","Sensor de ambiente (T1) abierto o en corto","Conector del sensor y su resistencia.",0],
+    ["P0","Protección del módulo inverter (IPM)","Tensión de línea. Si sigue: placa inverter o compresor.",0],
+    ["P1","Protección por alta o baja tensión","Medí la tensión de entrada; revisá línea y térmica.",0],
+    ["P2","Temperatura alta del compresor","Falta de gas, condensadora sucia o sin aire.",0],
+  ],
+  "BGH": [], "Otra": [],
+};
+let brand = store.get("brand", "LG");
+if (!CODES[brand]) brand = "LG";
+let myCodes = store.get("myCodes", []);
+function renderBrands(){
+  const box = $("brandChips"); box.innerHTML = "";
+  Object.keys(CODES).forEach(b => {
+    const c = document.createElement("button"); c.className = "chip"; c.textContent = b;
+    c.setAttribute("aria-pressed", b === brand);
+    c.onclick = () => { brand = b; store.set("brand", b); renderBrands(); renderCodes(); };
+    box.appendChild(c);
+  });
+}
+function renderCodes(){
+  const q = $("codeQ").value.trim().toUpperCase().replace(/\s/g,"");
+  const mine = myCodes.filter(m => brand === "Otra" || m.b.toLowerCase() === brand.toLowerCase() || brand.toLowerCase().includes(m.b.toLowerCase()))
+    .map(m => [m.c, m.t, "", 2, m]);
+  const list = [...CODES[brand], ...mine].filter(c => !q || c[0].toUpperCase().replace(/\s/g,"").includes(q));
+  const box = $("codeList"); box.innerHTML = "";
+  if (!list.length) box.innerHTML = q
+    ? `<div class="empty"><b>No tengo anotado el ${esc(q)}</b>Preguntale a Claude, y si lo resolvés, anotalo abajo.</div>`
+    : `<div class="empty"><b>Todavía no hay códigos de ${esc(brand)}</b>Anotá los que vayas viendo y quedan acá.</div>`;
+  list.forEach(c => {
+    const r = document.createElement("div"); r.className = "code";
+    r.innerHTML = `<span class="c">${esc(c[0])}</span><span class="t">${esc(c[1])}</span>${c[2] ? `<span class="h">${esc(c[2])}</span>` : ""}
+      <span class="v">${c[3]===1 ? "Según soporte oficial de "+esc(brand) : c[3]===0 ? "Puede variar según modelo" : "Anotado por vos"}${c[3]===2 ? `<button class="del" aria-label="Borrar el código ${esc(c[0])}">${ico("i-trash")}Borrar</button>` : ""}</span>`;
+    if (c[3]===2) r.querySelector(".del").onclick = () => {
+      const idx = myCodes.indexOf(c[4]);
+      myCodes = myCodes.filter(m => m !== c[4]); store.set("myCodes", myCodes); renderCodes();
+      toast(`Código ${c[0]} borrado`, () => { myCodes.splice(Math.max(0, Math.min(idx, myCodes.length)), 0, c[4]); store.set("myCodes", myCodes); renderCodes(); });
+    };
+    box.appendChild(r);
+  });
+  $("codeAskTxt").textContent = q ? `Preguntarle a Claude por ${q}` : "Preguntarle a Claude";
+}
+$("codeQ").oninput = renderCodes;
+$("codeAsk").onclick = () => {
+  const q = $("codeQ").value.trim();
+  const txt = q ? `Tengo un split ${brand !== "Otra" ? "marca "+brand : ""} que muestra el código ${q} en el display. ¿Qué significa y qué reviso, en orden?`
+                : `Tengo un split ${brand !== "Otra" ? "marca "+brand : ""} que muestra un código de error. Te digo cuál:`;
+  askClaude(txt);
+};
+const closeNc = () => { $("ncForm").hidden = true; $("ncOpen").hidden = false; $("ncCode").value = $("ncText").value = $("ncBrand").value = ""; };
+$("ncOpen").onclick = () => {
+  $("ncCode").value = $("codeQ").value.trim().toUpperCase();
+  $("ncBrand").value = brand !== "Otra" ? brand : "";
+  $("ncForm").hidden = false; $("ncOpen").hidden = true;
+  $("ncForm").scrollIntoView({behavior:"smooth", block:"center"});
+  ($("ncCode").value ? $("ncText") : $("ncCode")).focus({preventScroll:true});
+};
+$("ncCancel").onclick = closeNc;
+$("ncSave").onclick = () => {
+  const c = $("ncCode").value.trim().toUpperCase(), t = $("ncText").value.trim();
+  const b = $("ncBrand").value.trim() || (brand !== "Otra" ? brand : "Otra");
+  if (!c || !t){ toast("Poné el código y qué significa"); (c ? $("ncText") : $("ncCode")).focus(); return; }
+  myCodes.push({c, t, b}); store.set("myCodes", myCodes);
+  closeNc(); toast("Código guardado"); renderCodes();
+};
+renderBrands(); renderCodes();
+
+/* ---------- Entreno ---------- */
 const FA = [
-  ["Sentadilla a la silla con mancuerna","3×10","Bajá hasta tocar la silla, pecho arriba."],
-  ["Press de pecho en máquina","3×10–12","Bajá lento, dos segundos."],
-  ["Remo con mancuerna apoyado","3×10 c/lado","Espalda recta, el codo va hacia el bolsillo."],
-  ["Peso muerto rumano","3×10","Cola atrás, espalda recta. Es el gesto de levantar una condensadora bien."],
-  ["Plancha","3×20–30 s","Cola apretada, sin hundir la cintura."],
+  ["Sentadilla a la silla con mancuerna","3×10","Bajá hasta tocar la silla, pecho arriba.",8],
+  ["Press de pecho en máquina","3×10–12","Bajá lento, dos segundos.",20],
+  ["Remo con mancuerna apoyado","3×10 c/lado","Espalda recta, el codo va hacia el bolsillo.",8],
+  ["Peso muerto rumano","3×10","Cola atrás, espalda recta. Es el gesto de levantar una condensadora bien.",8],
+  ["Plancha","3×20–30 s","Cola apretada, sin hundir la cintura.",null],
 ];
 const FB = [
-  ["Prensa de piernas","3×12","No trabes las rodillas arriba."],
-  ["Jalón al pecho","3×10–12","Tirá con los codos hacia abajo, pecho afuera."],
-  ["Press de hombros sentado","3×10","Si molesta el hombro, menos peso o salteala."],
-  ["Puente de glúteos","3×12","Apretá arriba un segundo."],
-  ["Paseo del granjero","3×30 m","Mancuernas pesadas, caminá derecho. Como cargar equipos, pero parejo."],
+  ["Prensa de piernas","3×12","No trabes las rodillas arriba.",40],
+  ["Jalón al pecho","3×10–12","Tirá con los codos hacia abajo, pecho afuera.",25],
+  ["Press de hombros sentado","3×10","Si molesta el hombro, menos peso o salteala.",5],
+  ["Puente de glúteos","3×12","Apretá arriba un segundo.",null],
+  ["Paseo del granjero","3×30 m","Mancuernas pesadas, caminá derecho. Como cargar equipos, pero parejo.",10],
 ];
-// índice JS: 0=dom
 const PLAN = {
-  1:{t:"Fuerza A", s:"45 min · peso que te deje 2–3 reps de resto", i:"i-dumb", ex:FA},
-  2:{t:"Natación", s:"30–40 min suave · 4×100 tranquilo + técnica", i:"i-swim"},
-  3:{t:"Caminata", s:"45 min a ritmo de charla", i:"i-walk"},
-  4:{t:"Fuerza B", s:"45 min · peso que te deje 2–3 reps de resto", i:"i-dumb", ex:FB},
-  5:{t:"Natación", s:"30–40 min · variá estilos", i:"i-swim"},
-  6:{t:"Caminata larga", s:"60–75 min · parque o costanera", i:"i-walk"},
+  1:{t:"Fuerza A", s:"45 min · que te sobren 2–3 repeticiones", i:"i-dumb", ex:FA},
+  2:{t:"Natación", s:"30–40 min suave · 4×100 tranquilo + técnica", i:"i-swim", c:"nado"},
+  3:{t:"Caminata", s:"45 min a ritmo de charla", i:"i-walk", c:"cam", km:4, min:45},
+  4:{t:"Fuerza B", s:"45 min · que te sobren 2–3 repeticiones", i:"i-dumb", ex:FB},
+  5:{t:"Natación", s:"30–40 min · variá estilos", i:"i-swim", c:"nado"},
+  6:{t:"Caminata larga", s:"60–75 min · parque o costanera", i:"i-walk", c:"cam", km:6, min:70},
   0:{t:"Descanso", s:"10 min de estiramiento y listo", i:"i-rest"},
 };
-const DN = ["D","L","M","M","J","V","S"];
-const today = new Date().getDay();
-let selDay = today;
-const weekKey = (() => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d.toISOString().slice(0,10); })();
+const DN = ["Do","Lu","Ma","Mi","Ju","Vi","Sá"];
+const DFULL = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const todayDow = new Date().getDay();
+let selDay = todayDow;
+const monday = (() => { const d = new Date(); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return d; })();
+const weekKey = iso(monday);
+const dayDate = dow => { const d = new Date(monday); d.setDate(d.getDate() + ((dow+6)%7)); return iso(d); };
+const kgNow = store.get("kg", {});
+const lifts = store.get("lifts", {});
+const cardio = store.get("cardio", []);
+let largos = 0, pool = store.get("pool", 25);
+
 function renderWeek(){
   const w = $("week"); w.innerHTML = "";
   [1,2,3,4,5,6,0].forEach(d => {
     const b = document.createElement("button");
-    b.className = "day" + (d===today ? " today" : "");
+    b.className = "day" + (d===todayDow ? " today" : "");
     b.setAttribute("aria-pressed", d===selDay);
-    b.setAttribute("aria-label", PLAN[d].t);
-    b.innerHTML = `${DN[d]}<svg class="i"><use href="#${PLAN[d].i}"/></svg>`;
-    b.onclick = () => { selDay = d; renderWeek(); };
+    b.setAttribute("aria-label", `${DFULL[d]}${d===todayDow ? " (hoy)" : ""}: ${PLAN[d].t}`);
+    b.innerHTML = `${DN[d]}${ico(PLAN[d].i)}`;
+    b.onclick = () => { selDay = d; largos = 0; renderWeek(); };
     w.appendChild(b);
   });
   const p = PLAN[selDay];
-  $("dTitle").textContent = p.t; $("dSub").textContent = p.s;
+  $("dTitle").textContent = p.t;
+  $("dSub").textContent = (selDay === todayDow ? "Hoy" : DFULL[selDay]) + " · " + p.s;
   $("dIco").innerHTML = `<use href="#${p.i}"/>`;
-  const list = $("exList"); list.innerHTML = "";
   $("timerBtn").hidden = !p.ex;
+  renderEx(p); renderCardio(p); renderSummary();
+}
+function renderEx(p){
+  const list = $("exList"); list.innerHTML = "";
   if (!p.ex) return;
-  const dk = "done:"+weekKey+":"+selDay;
+  const dk = "done:"+weekKey+":"+selDay, date = dayDate(selDay);
   const done = store.get(dk, []);
-  p.ex.forEach(([n, r, cue], i) => {
-    const row = document.createElement("div");
+  p.ex.forEach(([n, r, cue, def], i) => {
     const isDone = done.includes(i);
+    if (def != null && kgNow[n] == null) kgNow[n] = def;
+    const kg = kgNow[n];
+    const log = (lifts[n] || []).filter(x => x.d !== date);
+    const last2 = log.slice(-2);
+    const suggest = def != null && last2.length === 2 && last2.every(x => x.kg === kg);
+    const row = document.createElement("div");
     row.className = "exr" + (isDone ? " done" : "");
-    row.innerHTML = `<button class="tick" aria-pressed="${isDone}" aria-label="Hecho: ${n}"><svg class="i"><use href="#i-check"/></svg></button>
-      <button class="n"><span>${n}</span></button><span class="reps">${r}</span>
-      <div class="cue" hidden>${cue}</div>`;
+    row.innerHTML = `<button class="tick" aria-pressed="${isDone}" aria-label="Hecho: ${esc(n)}">${ico("i-check")}</button>
+      <button class="n" aria-expanded="false"><span class="tx"><span>${esc(n)}</span><span class="reps">${r} · cómo se hace</span></span>${ico("i-chev","chev")}</button>
+      ${def != null ? `<div class="qty kg"><button data-d="-2.5" aria-label="Menos peso">${ico("i-minus")}</button><span>${num(kg,1)} kg</span><button data-d="2.5" aria-label="Más peso">${ico("i-plus")}</button></div>` : ""}
+      ${suggest ? `<button class="up">Ya podés: probá ${num(kg+2.5,1)} kg</button>` : ""}
+      <div class="cue" hidden>${esc(cue)}${log.length ? ` · Última vez: ${num(log[log.length-1].kg,1)} kg` : ""}</div>`;
     row.querySelector(".tick").onclick = () => {
       const d = store.get(dk, []); const k = d.indexOf(i);
-      k >= 0 ? d.splice(k,1) : d.push(i); store.set(dk, d); renderWeek();
+      lifts[n] = (lifts[n] || []).filter(x => x.d !== date);
+      if (k >= 0) d.splice(k,1); else { d.push(i); lifts[n].push({d: date, kg: kg ?? 0}); }
+      store.set(dk, d); store.set("lifts", lifts); renderWeek();
     };
-    row.querySelector(".n").onclick = () => { const c = row.querySelector(".cue"); c.hidden = !c.hidden; };
+    row.querySelector(".n").onclick = e => { const c = row.querySelector(".cue"); c.hidden = !c.hidden; e.currentTarget.setAttribute("aria-expanded", !c.hidden); };
+    row.querySelectorAll(".kg button").forEach(b => b.onclick = () => { kgNow[n] = clamp(kg + +b.dataset.d, 0, 300); store.set("kg", kgNow); renderWeek(); });
+    row.querySelector(".up")?.addEventListener("click", () => { kgNow[n] = kg + 2.5; store.set("kg", kgNow); renderWeek(); });
     list.appendChild(row);
   });
 }
-renderWeek();
+function renderCardio(p){
+  const box = $("cardioBox"); box.innerHTML = "";
+  if (!p.c) return;
+  const date = dayDate(selDay);
+  const saved = cardio.filter(x => x.d === date && x.t === p.c);
+  const savedTxt = saved.length ? `<div class="save">${ico("i-check")}Guardado: ${p.c === "nado" ? num(saved.reduce((s,x)=>s+x.m,0))+" m" : num(saved.reduce((s,x)=>s+x.km,0),1)+" km"}</div>` : "";
+  if (p.c === "nado"){
+    box.innerHTML = `<div class="stack">
+      <div class="row"><span class="lbl">Pileta</span><div class="seg" id="poolSeg" role="group" aria-label="Largo de la pileta"><button data-v="25">25 m</button><button data-v="50">50 m</button></div></div>
+      <div class="counter"><button class="minus" id="lgMinus" aria-label="Restar un largo">${ico("i-minus")}</button>
+        <button class="plus" id="lgPlus" aria-label="Sumar un largo"><b>${largos}</b><small>largos · tocá +1</small></button><span></span></div>
+      <div class="sub" style="text-align:center">${num(largos*pool)} metros</div>
+      <button class="btn primary" id="cdSave" ${largos ? "" : "disabled"}>Guardar natación</button>${savedTxt}</div>`;
+    seg("poolSeg", String(pool), v => { pool = +v; store.set("pool", pool); renderCardio(p); });
+    $("lgPlus").onclick = () => { largos++; renderCardio(p); };
+    $("lgMinus").onclick = () => { largos = Math.max(0, largos-1); renderCardio(p); };
+    $("cdSave").onclick = () => { if (!largos) return; cardio.push({d: date, t:"nado", m: largos*pool}); store.set("cardio", cardio); largos = 0; toast("¡Bien ahí! Natación guardada"); renderWeek(); };
+  } else {
+    const st = renderCardio.st = renderCardio.st?.d === date ? renderCardio.st : {d: date, km: p.km, min: p.min};
+    box.innerHTML = `<div class="stack">
+      <div class="rows">
+      <div class="row"><span class="lbl">${ico("i-walk")}Kilómetros</span><div class="step"><button id="kmM" aria-label="Menos kilómetros">${ico("i-minus")}</button><output>${num(st.km,1)}</output><button id="kmP" aria-label="Más kilómetros">${ico("i-plus")}</button></div></div>
+      <div class="row"><span class="lbl">${ico("i-clock")}Minutos</span><div class="step"><button id="miM" aria-label="Menos minutos">${ico("i-minus")}</button><output>${st.min}</output><button id="miP" aria-label="Más minutos">${ico("i-plus")}</button></div></div>
+      </div>
+      <button class="btn primary" id="cdSave">Guardar caminata</button>${savedTxt}</div>`;
+    $("kmM").onclick = () => { st.km = Math.max(.5, st.km - .5); renderCardio(p); };
+    $("kmP").onclick = () => { st.km = Math.min(40, st.km + .5); renderCardio(p); };
+    $("miM").onclick = () => { st.min = Math.max(5, st.min - 5); renderCardio(p); };
+    $("miP").onclick = () => { st.min = Math.min(300, st.min + 5); renderCardio(p); };
+    $("cdSave").onclick = () => { cardio.push({d: date, t:"cam", km: st.km, min: st.min}); store.set("cardio", cardio); toast("¡Bien ahí! Caminata guardada"); renderWeek(); };
+  }
+}
+function renderSummary(){
+  const key = today.slice(0,7);
+  $("sumMonth").textContent = "En " + new Date().toLocaleDateString("es-AR", {month:"long"});
+  const days = new Set(); Object.values(lifts).forEach(l => l.forEach(x => { if (x.d.startsWith(key)) days.add(x.d); }));
+  const mes = cardio.filter(x => x.d.startsWith(key));
+  $("sFz").textContent = days.size + (days.size === 1 ? " día" : " días");
+  $("sKm").textContent = num(mes.filter(x => x.t==="cam").reduce((s,x)=>s+x.km,0),1) + " km";
+  const m = mes.filter(x => x.t==="nado").reduce((s,x)=>s+x.m,0);
+  $("sNa").textContent = m >= 1000 ? num(m/1000,1)+" km" : num(m)+" m";
+}
 
 let tInt = null, tLeft = 0, actx = null;
 function beep(){
@@ -496,30 +1303,27 @@ function beep(){
   }catch{}
   try{ navigator.vibrate?.([200,100,200]); }catch{}
 }
-function fmt(s){ return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); }
+const fmt = s => Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
 $("timerBtn").onclick = () => {
   if (tInt){ clearInterval(tInt); tInt = null; $("timerBtn").classList.remove("run"); $("timerTxt").textContent = "Descanso 1:30"; return; }
   try{ actx = actx || new (window.AudioContext||window.webkitAudioContext)(); actx.resume(); }catch{}
-  tLeft = 90; $("timerBtn").classList.add("run"); $("timerTxt").textContent = fmt(tLeft);
+  tLeft = 90; $("timerBtn").classList.add("run"); $("timerTxt").textContent = fmt(tLeft) + " · tocá para parar";
   tInt = setInterval(() => {
-    tLeft--; $("timerTxt").textContent = fmt(tLeft);
+    tLeft--; $("timerTxt").textContent = fmt(tLeft) + " · tocá para parar";
     if (tLeft <= 0){ clearInterval(tInt); tInt = null; beep(); $("timerBtn").classList.remove("run"); $("timerTxt").textContent = "¡Dale, otra serie!"; setTimeout(()=>{ if(!tInt) $("timerTxt").textContent = "Descanso 1:30"; }, 3000); }
   }, 1000);
 };
 
 /* ---------- Claude (abre claude.ai con la pregunta lista) ---------- */
 const CTX = "Soy instalador de aires acondicionados (splits) en Buenos Aires. No soy de la compu, uso solo el celular: contestame simple, en castellano rioplatense, corto (máximo 8 líneas), con pasos si sirve. Si hay riesgo eléctrico, de altura o de gas, avisame. Hago natación y caminatas y estoy empezando musculación.\n\nMi pregunta: ";
-function ask(q){
-  q = q.trim(); if (!q) { $("ask").focus(); return; }
-  const url = "https://claude.ai/new?q=" + encodeURIComponent(CTX + q);
-  const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener";
-  document.body.appendChild(a); a.click(); a.remove();
-  $("ask").value = "";
+function askClaude(q){
+  q = String(q||"").trim(); if (!q) { show("claude"); $("ask").focus(); return; }
+  openUrl("https://claude.ai/new?q=" + encodeURIComponent(CTX + q));
 }
-$("sendBtn").onclick = () => ask($("ask").value);
-$("ask").addEventListener("keydown", e => { if (e.key==="Enter" && !e.shiftKey){ e.preventDefault(); ask($("ask").value); } });
-$("ask").addEventListener("input", () => { const t=$("ask"); t.style.height="auto"; t.style.height=Math.min(t.scrollHeight,140)+"px"; });
-document.querySelectorAll("#chips .chip").forEach(c => c.onclick = () => ask(c.textContent));
+$("sendBtn").onclick = () => { if (!$("ask").value.trim()){ toast("Escribí la pregunta primero"); $("ask").focus(); return; } askClaude($("ask").value); $("ask").value = ""; };
+$("ask").addEventListener("keydown", e => { if (e.key==="Enter" && !e.shiftKey){ e.preventDefault(); $("sendBtn").click(); } });
+$("ask").addEventListener("input", () => { const t=$("ask"); t.style.height="auto"; t.style.height=Math.min(t.scrollHeight,160)+"px"; });
+document.querySelectorAll("#chips .chip").forEach(c => c.onclick = () => askClaude(c.textContent));
 
 /* ---------- instalar + sin conexión ---------- */
 let installEvt = null;
@@ -531,7 +1335,8 @@ $("installBtn").onclick = async () => {
 };
 if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(()=>{}));
 
-show(store.get("tab", "trabajo"));
+document.querySelectorAll(".subnav").forEach(n => showSub(n.dataset.group, subs[n.dataset.group] || n.querySelector("button").dataset.sub));
+show(store.get("tab", "calc"));
 })();
 </script>
 </body>
